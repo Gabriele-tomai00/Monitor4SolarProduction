@@ -20,6 +20,7 @@ let percenutualeLG;
 // GET HTML DIV //
 const houseValuePowerDiv = document.getElementById("unit-house-power");
 const carValuePercentageDiv = document.getElementById("unit-car-percentage");
+const carValuePercentageDivInModal = document.getElementById("car-percentage-div-in-modal");
 const carValuePowerDiv = document.getElementById("unit-car-power");
 const prismPlugStateDiv = document.getElementById("prism-plug-state");
 const boilerValuePowerDiv = document.getElementById("unit-boiler-power");
@@ -90,6 +91,7 @@ socket.on('dati', (data) => {
                     houseValuePowerDiv.textContent = consumoHome + " kw";
                     //car
                     carValuePercentageDiv.textContent = opelPercentge + "%";
+                    carValuePercentageDivInModal.textContent = opelPercentge + "%";
                     carValuePercentageDivInModal.textContent = opelPercentge + "%";
                     carValuePowerDiv.textContent = prismPotenzaDiCarica + " kw";
                     prismPlugStateDiv.textContent = prismPlugState;
