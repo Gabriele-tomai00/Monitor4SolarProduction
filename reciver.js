@@ -10,6 +10,7 @@ let boilerPower;
 let opelPercentge;
 let prismStato;
 let prismPotenzaDiCarica;
+let prismPlugState;
 
 let energiaFv; 
 let energiaRete;
@@ -17,8 +18,11 @@ let consumoHome;
 let caricaLG;
 let percenutualeLG;
 // GET HTML DIV //
+const houseValuePowerDiv = document.getElementById("unit-house-power");
 const carValuePercentageDiv = document.getElementById("unit-car-percentage");
 const carValuePowerDiv = document.getElementById("unit-car-power");
+const prismPlugStateDiv = document.getElementById("prism-plug-state");
+const boilerValuePowerDiv = document.getElementById("unit-boiler-power");
 
 // // Gestione dell'evento di errore in caso nodejs sia offline
 // socket.on('error', (error) => {
@@ -48,6 +52,7 @@ socket.on('dati', (data) => {
                     }
                     else
                     {
+                      //console.log("data: " + JSON.stringify(data));
                       hideConnectionAPIAlert(); 
                       // GET VALUE FROM DATA RESPONSE //
                       solaredgePotenzaTotaleDc = data['solaredge_potenza_totale_dc']; //getValueById(data, "sensor.solaredge_potenza_totale_dc"); console.log("solaredgePotenzaTotaleDc: " + solaredgePotenzaTotaleDc);
@@ -60,6 +65,8 @@ socket.on('dati', (data) => {
                       opelPercentge = data['car_corsa_energy_level'];
                       prismStato = data['prism_stato'];
                       prismPotenzaDiCarica = data['prism_potenza_di_carica'];
+                      prismPlugState = data['prism_plug_state'];
+
                       //console.log("prismStato: " + prismStato);
                       //console.log("prismPotenzaDiCarica: " + prismPotenzaDiCarica);
 
@@ -78,9 +85,17 @@ socket.on('dati', (data) => {
                     setRoundValue("house-value", consumoHome);
                     setRoundValue("battery-power-value", caricaLG);
                     setBatteryValueSize("battery-percentage-value", percenutualeLG);
+
+                    //house
+                    houseValuePowerDiv.textContent = consumoHome + " kw";
                     //car
                     carValuePercentageDiv.textContent = opelPercentge + "%";
+                    carValuePercentageDivInModal.textContent = opelPercentge + "%";
                     carValuePowerDiv.textContent = prismPotenzaDiCarica + " kw";
+                    prismPlugStateDiv.textContent = prismPlugState;
+
+                    //boiler
+                    boilerValuePowerDiv.textContent = boilerPower + " kw";
 
 
                       updateEnergyBar(energiaFv);

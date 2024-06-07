@@ -37,7 +37,7 @@
             <img src="img/arrow_up_to_under.png" style="display: none;" class="arrow_icon" id="arrowFVtoBattery" alt="arrow FV to Battery">
             <img src="img/arrow_left_to_right.png" class="arrow_icon" id="arrowGridToHouse" alt="arrow Grid to House">
           </td>
-          <td><!-- 6 --><img src="img/house_icon.png" class="setImageDiv" alt="House icon">
+          <td><!-- 6 --><img src="img/house_icon.png" class="setImageDiv" id="house-img" alt="House icon">
             <div class="value-with-unit">
                 <span class="value-text" id="house-value">...</span><span class="unit-text"> kw</span>
             </div>
@@ -101,6 +101,39 @@
                 Errore di connessione<br> con il server web<br> 
     </p>
   </div>
+
+
+  <div class="info-modal" id="house-modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="modal-title">Consumi della casa</div>
+
+        <div class="modal-info">
+          <div class="modal-row">
+            <p class="block-paragraph">Consumo istantaneo:<span style="margin-right: 10px;"></span></p><p id="unit-house-power"></p>
+          </div>
+          <div class="modal-row">
+            <p>Ricarica auto:<span style="margin-right: 10px;"></span></p><p id="prism-plug-state"></p>
+          </div>
+          <div class="modal-row">
+            <p>% batteria auto:<span style="margin-right: 10px;"></span></p><p id="carValuePercentageDivInModal"></p>
+          </div>
+        </div>
+    </div>
+  </div>
+
+<div class="info-modal" id="boiler-modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="modal-title">Boiler <span style="color: #32CD32;">ACCESO</span></div>
+        <div class="modal-info">
+          <div class="modal-row">
+            <p>Consumo istantaneo:<span style="margin-right: 10px;"></span></p><p id="unit-boiler-power"></p>
+          </div>
+        </div>
+    </div>
+</div>
+
 
 
 </body>

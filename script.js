@@ -338,6 +338,48 @@ function showErrorNodeJSAlert() {
     avviso.style.filter = 'none';
   }
 
+  ////////////////////////////////////////////        MODAL        ////////////////////////////////////////////
+  document.addEventListener("DOMContentLoaded", function () {
+    //////// boiler-modal /////////////
+    var boilerModal = document.getElementById("boiler-modal");
+    var boilerImg = document.getElementById("boiler-img");
+    var closeModalSpanBoiler = document.getElementsByClassName("close")[0];
+
+    boilerImg.onclick = function () {
+        boilerModal.style.display = "block";
+    };
+
+
+    //////// house-modal /////////////
+    var houseModal = document.getElementById("house-modal");
+    var houseImg = document.getElementById("house-img");
+    var closeModalSpanHouse = document.getElementsByClassName("close")[1];
+
+    houseImg.onclick = function () {
+        houseModal.style.display = "block";
+};   
+
+    ////// CLOSE MODAL ////////
+
+        // Function to close the modal by clicking on the “x”
+        closeModalSpanBoiler.onclick = function () {
+            boilerModal.style.display = "none";
+        };
+        closeModalSpanHouse.onclick = function () {
+            houseModal.style.display = "none";
+        };
+        // Function to close the modal by clicking out of the modal
+        window.onclick = function (event) {
+            if (event.target == boilerModal) {
+                boilerModal.style.display = "none";
+            }
+            else if (event.target == houseModal) {
+                houseModal.style.display = "none";
+            }
+        };
+    
+});
+
 
   ///////////////  MAIN  ////////////////////
 let audioAlarmPointer = null;
