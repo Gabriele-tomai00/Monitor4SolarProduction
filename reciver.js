@@ -95,6 +95,11 @@ socket.on('dati', (data) => {
                     carValuePercentageDivInModal.textContent = opelPercentge + "%";
                     carValuePowerDiv.textContent = prismPotenzaDiCarica + " kw";
                     prismPlugStateDiv.textContent = prismPlugState;
+                    if (prismPlugState === "Scollegata") {
+                      prismPlugStateDiv.style.color = "red"; // Testo in rosso
+                    } else {
+                        prismPlugStateDiv.style.color = "green"; // Testo in verde
+                    }
 
                     //boiler
                     boilerValuePowerDiv.textContent = boilerPower + " kw";
