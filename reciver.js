@@ -85,7 +85,7 @@ socket.on('dati', (data) => {
 
                       updateEnergyBar(energiaFv);
                       ChangeCarIcon(prismStato, prismPotenzaDiCarica);
-                      boilerIcon(boilerPower.value);
+                      boilerIcon(boilerPower);
                       updateArrowVisibility(energiaFv, energiaRete, consumoHome, caricaLG);
                       updateBatteryLevel(percenutualeLG);
                       updateWeatherImage(energiaFv);
