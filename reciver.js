@@ -1,28 +1,23 @@
 const socket = io();
 
-let solaredgePotenzaTotaleDc;
-let prismSensoreRete;
-let consumoCasa;
-let lgCaricaScaricaIstantaneaKw;
-let lgPercentualeDiCarica;
+let pvGeneration;
+let gridSensor;
+let homeConsumption;
+let batteryPVchargeDischarge;
+let batteryPVpercentage;
 let boilerPower;
 // car
-let opelPercentge;
-let prismStato;
-let prismPotenzaDiCarica;
-let prismPlugState;
+let carBatteryPercentge;
+let carState;
+let wallboxChargePower;
+let wallboxPlugState;
 
-let energiaFv; 
-let energiaRete;
-let consumoHome;
-let caricaLG;
-let percenutualeLG;
 // GET HTML DIV //
 const houseValuePowerDiv = document.getElementById("unit-house-power");
 const carValuePercentageDiv = document.getElementById("unit-car-percentage");
 const carValuePercentageDivInModal = document.getElementById("car-percentage-div-in-modal");
 const carValuePowerDiv = document.getElementById("unit-car-power");
-const prismPlugStateDiv = document.getElementById("prism-plug-state");
+const wallboxPlugStateDiv = document.getElementById("prism-plug-state");
 const boilerValuePowerDiv = document.getElementById("unit-boiler-power");
 
 // // Gestione dell'evento di errore in caso nodejs sia offline
@@ -36,16 +31,16 @@ socket.on('dati', (data) => {
 
                     if(hasError(data))
                     {
-                      solaredgePotenzaTotaleDc = "..."; //getValueById(data, "sensor.solaredge_potenza_totale_dc"); console.log("solaredgePotenzaTotaleDc: " + solaredgePotenzaTotaleDc);
-                      prismSensoreRete = "...";
-                      consumoCasa = "...";
-                      lgCaricaScaricaIstantaneaKw = "...";
-                      lgPercentualeDiCarica = "...";
+                      pvGeneration = "..."; //getValueById(data, "sensor.solaredge_potenza_totale_dc"); console.log("pvGeneration: " + pvGeneration);
+                      gridSensor = "...";
+                      homeConsumption = "...";
+                      batteryPVchargeDischarge = "...";
+                      batteryPVpercentage = "...";
                       boilerPower = "...";
                       // car
-                      opelPercentge = "...";
-                      prismStato = "...";
-                      prismPotenzaDiCarica = "...";
+                      carBatteryPercentge = "...";
+                      carState = "...";
+                      wallboxChargePower = "...";
 
                       // APPARE ALERT CON SCRITTO "IMMPOSSIBILE COMUNICARE CON IL SERVER"
                       showConnectionAPIAlert();
@@ -53,65 +48,57 @@ socket.on('dati', (data) => {
                     }
                     else
                     {
-                      //console.log("data: " + JSON.stringify(data));
                       hideConnectionAPIAlert(); 
                       // GET VALUE FROM DATA RESPONSE //
-                      solaredgePotenzaTotaleDc = data['solaredge_potenza_totale_dc']; //getValueById(data, "sensor.solaredge_potenza_totale_dc"); console.log("solaredgePotenzaTotaleDc: " + solaredgePotenzaTotaleDc);
-                      prismSensoreRete = data['prism_sensore_rete'];
-                      consumoCasa = data['consumo_casa'];
-                      lgCaricaScaricaIstantaneaKw = data['lg_carica_scarica_istantanea_kw'];
-                      lgPercentualeDiCarica = data['lg_percentuale_di_carica'];
+                      pvGeneration = data['solaredge_potenza_totale_dc'];
+                      gridSensor = data['prism_sensore_rete'];
+                      homeConsumption = data['consumo_casa'];
+                      batteryPVchargeDischarge = data['lg_carica_scarica_istantanea_kw'];
+                      batteryPVpercentage = data['lg_percentuale_di_carica'];
                       boilerPower = data['shelly_consumo_boiler'];
                       // car
-                      opelPercentge = data['car_corsa_energy_level'];
-                      prismStato = data['prism_stato'];
-                      prismPotenzaDiCarica = data['prism_potenza_di_carica'];
-                      prismPlugState = data['prism_plug_state'];
+                      carBatteryPercentge = data['car_corsa_energy_level'];
+                      carState = data['prism_stato'];
+                      wallboxChargePower = data['prism_potenza_di_carica'];
+                      wallboxPlugState = data['prism_plug_state'];
 
-                      //console.log("prismStato: " + prismStato);
-                      //console.log("prismPotenzaDiCarica: " + prismPotenzaDiCarica);
-
-
-                     energiaFv = roundValue(solaredgePotenzaTotaleDc); //console.log("energiaFV: " + energiaFv);
-                     energiaRete = roundValue(prismSensoreRete); //console.log("energiaRete: " + energiaRete);
-                     consumoHome = roundValue(consumoCasa); //console.log("consumoHome: " + consumoHome);
-                     caricaLG = roundValue(lgCaricaScaricaIstantaneaKw); //console.log("caricaLG: " + caricaLG);
-                     percenutualeLG = lgPercentualeDiCarica; //console.log("percenutualeLG: " + percenutualeLG);
+                      //console.log("carState: " + carState);
+                      //console.log("wallboxChargePower: " + wallboxChargePower);
 
                     // SET VALUE IN HTML //
-                    // fvValueDiv.textContent = solaredgePotenzaTotaleDc.value + " kw";
-                    setRoundValue("fv-value", energiaFv);
-                    setRoundValue("grid-value", energiaRete);
-                    setRoundValue("grid-value-alert", energiaRete);
-                    setRoundValue("house-value", consumoHome);
-                    setRoundValue("battery-power-value", caricaLG);
-                    setBatteryValueSize("battery-percentage-value", percenutualeLG);
+                    // fvValueDiv.textContent = pvGeneration.value + " kw";
+                    setRoundValue("fv-value", roundValue(pvGeneration));
+                    setRoundValue("grid-value", roundValue(gridSensor));
+                    setRoundValue("grid-value-alert", roundValue(gridSensor));
+                    setRoundValue("house-value", roundValue(homeConsumption));
+                    setRoundValue("battery-power-value", roundValue(batteryPVchargeDischarge));
+                    setBatteryValueSize("battery-percentage-value", batteryPVpercentage);
 
                     //house
-                    houseValuePowerDiv.textContent = consumoHome + " kw";
+                    houseValuePowerDiv.textContent = roundValue(homeConsumption) + " kw";
                     //car
-                    carValuePercentageDiv.textContent = opelPercentge + "%";
-                    carValuePercentageDivInModal.textContent = opelPercentge + "%";
-                    carValuePercentageDivInModal.textContent = opelPercentge + "%";
-                    carValuePowerDiv.textContent = prismPotenzaDiCarica + " kw";
-                    prismPlugStateDiv.textContent = prismPlugState;
-                    if (prismPlugState === "Scollegata") {
-                      prismPlugStateDiv.style.color = "red"; // Testo in rosso
+                    carValuePercentageDiv.textContent = carBatteryPercentge + "%";
+                    carValuePercentageDivInModal.textContent = carBatteryPercentge + "%";
+                    carValuePercentageDivInModal.textContent = carBatteryPercentge + "%";
+                    carValuePowerDiv.textContent = wallboxChargePower + " kw";
+                    wallboxPlugStateDiv.textContent = wallboxPlugState;
+                    if (wallboxPlugState === "Scollegata") {
+                      wallboxPlugStateDiv.style.color = "red"; // Testo in rosso
                     } else {
-                        prismPlugStateDiv.style.color = "green"; // Testo in verde
+                        wallboxPlugStateDiv.style.color = "green"; // Testo in verde
                     }
 
                     //boiler
                     boilerValuePowerDiv.textContent = boilerPower + " kw";
 
 
-                      updateEnergyBar(energiaFv);
-                      ChangeCarIcon(prismStato, prismPotenzaDiCarica);
+                      updateEnergyBar(roundValue(pvGeneration));
+                      ChangeCarIcon(carState, wallboxChargePower);
                       boilerIcon(boilerPower);
-                      updateArrowVisibility(energiaFv, energiaRete, consumoHome, caricaLG);
-                      updateBatteryLevel(percenutualeLG);
-                      updateWeatherImage(energiaFv);
-                      checkForEnergyAlert(energiaRete, prismPotenzaDiCarica.value);
+                      updateArrowVisibility(roundValue(pvGeneration), roundValue(gridSensor), roundValue(homeConsumption), roundValue(batteryPVchargeDischarge));
+                      updateBatteryLevel(batteryPVpercentage);
+                      updateWeatherImage(roundValue(pvGeneration));
+                      checkForEnergyAlert(roundValue(gridSensor), wallboxChargePower.value);
 
                   }
 

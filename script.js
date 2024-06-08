@@ -24,9 +24,9 @@ function updateBatteryLevel(batteryPercentageValueDiv) {
 
 /////// barra PRODUZIONE //////////////////////////
 // Funzione per aggiornare il valore e il colore della barra
-function updateEnergyBar(solaredgePotenzaTotaleDc) {
+function updateEnergyBar(pvGeneration) {
 
-    const energy = parseFloat(solaredgePotenzaTotaleDc);
+    const energy = parseFloat(pvGeneration);
     const energyBar = document.querySelector('.energy-bar');
     const energyFill = energyBar.querySelector('.energy-fill');
     const energyValue = energyBar.querySelector('.energy-value');
