@@ -6,57 +6,57 @@ const axios = require('axios');
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
+require('dotenv').config();
 
-const endpoint = 'https://tomaihome.duckdns.org:8123/api/states';
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIzOTRjYzk1ZGU2Mzc0NmViOGI3MTk2NTMzYzI5NmUzMSIsImlhdCI6MTcxMTgwODc2NiwiZXhwIjoyMDI3MTY4NzY2fQ._EB0tAcNn_5FR_Hkl45jZMF-nL-49B0s7E06DXfDVig'; // Assicurati di avere un token valido
+const endpoint = process.env.ENDPOINT;
+const token = process.env.TOKEN;
 
 function getValueById(data, id) {
     const sensor = data.find(item => item.entity_id === id);
     return sensor ? sensor.state : 'N/A';
 }
 
-
-// Configura Express per servire file statici dalla directory principale
 app.use(express.static(__dirname));
-
-// Avvia il server Express sulla porta specificata
 const PORT = 3100;
 
 
 io.on('connection', (socket) => {
     console.log('Un client si è connesso');
-    // il payload scaricato ogni 2 secondi è di circa 0.24 MB
+    // the payload downloaded every 2 seconds is about 0.24 MB
 
-    // Funzione per effettuare una richiesta API e inviare i dati ai client
+    // Function to make an API request and send data to clients
     const sendDataToDevices = async () => {
         try {
-            // Effettua una richiesta API includendo il token nell'intestazione
             const response = await axios.get(endpoint, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
                 timeout: 4000 // Timeout di 3 secondi in millisecondi
             });
-
-            // Ottieni i dati dalla risposta
             const filteredData = {
                 solaredge_potenza_totale_dc: getValueById(response.data, "sensor.solaredge_potenza_totale_dc"),
-                prism_sensore_rete: getValueById(response.data, "sensor.prism_sensore_rete"),
+                prism_sensore_rete: getValueById(response.data, "sensor.sensore_rete"),
                 consumo_casa: getValueById(response.data, "sensor.consumo_casa"),
                 lg_carica_scarica_istantanea_kw: getValueById(response.data, "sensor.lg_carica_scarica_istantanea_kw"),
                 lg_percentuale_di_carica: getValueById(response.data, "sensor.lg_percentuale_di_carica"),
                 shelly_consumo_boiler: getValueById(response.data, "sensor.shelly_consumo_boiler"),
                 car_corsa_energy_level: getValueById(response.data, "sensor.car_corsa_energy_level"),
                 prism_stato: getValueById(response.data, "sensor.prism_stato"),
-                prism_potenza_di_carica: getValueById(response.data, "sensor.prism_potenza_di_carica")
+                prism_potenza_di_carica: getValueById(response.data, "sensor.prism_potenza_di_carica"),
+                car_corsa_last_update: getValueById(response.data, "sensor.car_corsa_last_update"),
+
+                // new
+                solar_panel_to_grid: getValueById(response.data, "sensor.solar_panel_to_grid_kw"),
+                solar_panel_to_house: getValueById(response.data, "sensor.solar_panel_to_house_kw"),
+                solar_panel_to_battery: getValueById(response.data, "sensor.solar_panel_to_battery_kw"),
+                solar_grid_to_house: getValueById(response.data, "sensor.solar_grid_to_house_kw")
             };
+               
 
             const jsonData = JSON.stringify(filteredData);
             const json = JSON.parse(jsonData);
 
             io.emit('dati', json);
-
-
 
         } catch (error) {
             console.error('Errore durante la richiesta API:', error.message);
@@ -69,7 +69,7 @@ io.on('connection', (socket) => {
         }
     };
 
-    // Invia i dati ogni 2 secondi
+    // Send data every 2 seconds
     setInterval(sendDataToDevices, 2000);
 });
 
@@ -80,9 +80,9 @@ server.listen(3100, () => {
 
 
 
-// Endpoint per controllare lo stato del server
+// Endpoint to check the status of the server
 app.get('/server-status', (req, res) => {
-    res.status(200).send('Il server è attivo e funzionante.');
+    res.status(200).send('The server is up and running');
 });
 app.get('/favicon.ico', (req, res) => res.status(204));
 

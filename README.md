@@ -13,30 +13,29 @@ The web server must run on a single machine (even the same one as the browser), 
 
 <img src="img/for_readme/c.jpg" alt="Alt text" width="350">
 
-## Graphics
-I chose to use clear, iconic drawings and a very large font size to meet my parents' needs.  
-Remember that the purpose of this monitor is to be viewed on a wall-mounted tablet from a distance, not from a phone (although it is still possible to do so).
+## Dependencies
+You need to install `node` and `npm`.  
+You need the following dependencies: `http express socket.io mqtt axios dotenv`
 
-<img src="img/for_readme/a.png" alt="Alt text" width="350">
-
-
-
+# Configuration 
+Crea un file `.env` nella radice del progetto.
 ## Configuration of API VERSION
-Set these parameters correctly:
-```javascript
-const endpoint = 'https://....';
-const token = 'validToken'; 
+
+If you decide to use `appAPI.js` then add the following fields to the `.env` file.```plaintext
+# API
+ENDPOINT=your_endpoint
+TOKEN=your_token
 ```
 
 ## Configuration of MQTT VERSION
-Set these parameters correctly:
-```javascript
-const options = {
-    username: 'mqtt_user',
-    password: 'your_password',
-    connectTimeout: 3000
-};
+If you decide to use `appAPI.js` then add the following fields to the `.env` file.```plaintext
+# MQTT
+MQTT_USERNAME=mqtt_user
+MQTT_PASSWORD=your_pwd
+MQTT_CONNECT_TIMEOUT=3000
+MQTT_HOST=your_ip
 ```
+
 ## Configuration of both versions (reciver.js)
 
 It is necessary to modify the `reciver.js` file and set the JSON keys (whether using MQTT or API).
@@ -62,6 +61,12 @@ To start the web server, simply execute:
 - `node appAPI.js`: to use the version that supports API
 - `node appMQTT.js`: to use the version that supports MQTT
 
+## Graphics
+I chose to use clear, iconic drawings and a very large font size to meet my parents' needs.  
+Remember that the purpose of this monitor is to be viewed on a wall-mounted tablet from a distance, not from a phone (although it is still possible to do so).
+
+<img src="img/for_readme/a.png" alt="Alt text" width="350">
+
 ## Functions
 - Monitoring of: photovoltaic and storage production, grid consumption, home consumption;
 - Electric water heater consumption;
@@ -71,6 +76,7 @@ To start the web server, simply execute:
 
 ## Boiler
 When the boiler is on (detected power consumption greater than zero), a small icon appears at the bottom left, helping to understand the high household consumption. You can click on the icon to view a window with the boiler's instantaneous consumption.  
+
 <img src="img/for_readme/b.png" alt="Alt text" width="350">
 
 ## Electric Car
