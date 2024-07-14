@@ -3,7 +3,7 @@ const express = require('express');
 const socketIo = require('socket.io');
 const axios = require('axios');
 const mqtt = require('mqtt');
-
+const fs = require('fs'); 
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
@@ -25,6 +25,20 @@ const PORT = process.env.port;
 async function apiServer() {
     io.on('connection', (socket) => {
         console.log('One client connected');
+
+
+
+        socket.on('changeMode', (newMode) => {
+            if (newMode === 'api' || newMode === 'mqtt') {
+                updateEnvFile(newMode);
+            } else {
+                console.error("Error: invalid parameter. Use 'api' or 'mqtt'.");
+            }
+        });
+
+
+
+
         
         const sendDataToDevices = async () => {
             try {
@@ -77,10 +91,31 @@ function mqttServer() {
     };
     const host = process.env.MQTT_HOST;
     const client = mqtt.connect(`mqtt://${host}`, options);
+    
     client.on('connect', function () {
         console.log('Successful connection to the MQTT broker');
+        
+        // Subscribe to a specific topic if necessary
+        client.subscribe('dataForMonitorFV', function (err) {
+            if (err) {
+                console.error('Error when subscribing to dataForMonitorFV', err);
+            } else {
+                console.log('Successful subscription to dataForMonitorFV');
+            }
+        });
     });
-    
+
+    // Listen for changeMode event from the socket
+    io.on('connection', (socket) => {
+        socket.on('changeMode', (newMode) => {
+            if (newMode === 'api' || newMode === 'mqtt') {
+                updateEnvFile(newMode);
+            } else {
+                console.error("Error: invalid parameter. Use 'api' or 'mqtt'.");
+            }
+        });
+    });
+
     // Management of messages received from the MQTT broker
     client.on('message', function (topic, message) {
         const jsonData = JSON.stringify(message.toString(), null, 2);
@@ -95,24 +130,16 @@ function mqttServer() {
     // Error management
     client.on('error', function (error) {
         console.error('MQTT connection error');
-    
+        
         const errJson = {
             error: "Home Assistant MQTT Error Connection",
         };
         io.emit('dati', errJson);    
-        
-    });
-    
-    client.subscribe('dataForMonitorFV', function (err) {
-        if (err) {
-            console.error('Error when subscribing to dataForMonitorFV', err);
-        } else {
-            console.log('Successful subscription to dataForMonitorFV');
-        }
     });
     
     listenServer();
 }
+
 
 function listenServer() {
     server.listen(PORT, () => {
@@ -130,6 +157,35 @@ function listenServer() {
         console.log('Server running on http://localhost:' + PORT + '/monitor.html');
     });
 }
+
+
+
+
+function updateEnvFile(newMode) {
+    fs.readFile('.env', 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading .env file', err);
+            return;
+        }
+        const updatedEnv = data.replace(/mode=.*/, `mode=${newMode}`);
+        fs.writeFile('.env', updatedEnv, 'utf8', (err) => {
+            if (err) {
+                console.error('Error writing .env file', err);
+            } else {
+                console.log('.env file updated with new mode:', newMode);
+                currentMode = newMode; // Update the current mode
+                console.log("restarting server");
+                process.exit();
+            }
+        });
+    });
+}
+
+
+
+
+
+
 
 function main() {
     const args = process.argv.slice(2);
