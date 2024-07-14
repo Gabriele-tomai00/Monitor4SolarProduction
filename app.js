@@ -35,6 +35,7 @@ async function apiServer() {
                     timeout: 4000
                 });
                 const filteredData = {
+                    reciver_mode: "api",
                     solaredge_potenza_totale_dc: getValueById(response.data, "sensor.solaredge_potenza_totale_dc"),
                     prism_sensore_rete: getValueById(response.data, "sensor.sensore_rete"),
                     consumo_casa: getValueById(response.data, "sensor.consumo_casa"),
@@ -53,7 +54,6 @@ async function apiServer() {
 
                 const jsonData = JSON.stringify(filteredData);
                 const json = JSON.parse(jsonData);
-
                 io.emit('dati', json);
 
             } catch (error) {
@@ -77,39 +77,40 @@ function mqttServer() {
     };
     const host = process.env.MQTT_HOST;
     const client = mqtt.connect(`mqtt://${host}`, options);
-    
-    io.on('connection', (socket) => {
-        console.log('One client connected');
-        
-        client.on('connect', function () {
-            console.log('Successfully connected to the MQTT broker');
-            client.subscribe('dataForMonitorFV', function (err) {
-                if (err) {
-                    console.error('Error subscribing to dataForMonitorFV', err);
-                } else {
-                    console.log('Successfully subscribed to dataForMonitorFV');
-                }
-            });
-        });
-
-        client.on('message', function (topic, message) {
-            const jsonData = JSON.stringify(message.toString(), null, 2);
-            const validJsonString = jsonData.replace(/'/g, '"');
-            let stringWithoutQuotes = validJsonString.replace(/^["']|["']$/g, '');
-            const json = JSON.parse(stringWithoutQuotes);
-
-            io.emit('dati', json);
-        });
-
-        client.on('error', function (error) {
-            console.error('MQTT connection error', error.message);
-            const errJson = {
-                error: "Home Assistant MQTT Error Connection",
-            };
-            io.emit('dati', errJson);    
-        });
+    client.on('connect', function () {
+        console.log('Successful connection to the MQTT broker');
     });
+    
+    // Management of messages received from the MQTT broker
+    client.on('message', function (topic, message) {
+        const jsonData = JSON.stringify(message.toString(), null, 2);
+        const validJsonString = jsonData.replace(/'/g, '"');
+        let stringWithoutQuotes = validJsonString.replace(/^["']|["']$/g, '');
+        const json = JSON.parse(stringWithoutQuotes);
+        json.reciver_mode = "mqtt";
 
+        io.emit('dati', json);
+    });
+    
+    // Error management
+    client.on('error', function (error) {
+        console.error('MQTT connection error');
+    
+        const errJson = {
+            error: "Home Assistant MQTT Error Connection",
+        };
+        io.emit('dati', errJson);    
+        
+    });
+    
+    client.subscribe('dataForMonitorFV', function (err) {
+        if (err) {
+            console.error('Error when subscribing to dataForMonitorFV', err);
+        } else {
+            console.log('Successful subscription to dataForMonitorFV');
+        }
+    });
+    
     listenServer();
 }
 
