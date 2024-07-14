@@ -57,7 +57,7 @@ async function apiServer() {
                 io.emit('dati', json);
 
             } catch (error) {
-                console.error('Errore durante la richiesta API:', error.message);
+                console.error('Error during API request:', error.message);
                 const errJson = { error: "Home Assistant API Error Connection" };
                 io.emit('dati', errJson);
             }
@@ -67,7 +67,6 @@ async function apiServer() {
     });
 
     listenServer();
-    
 }
 
 function mqttServer() {
@@ -83,12 +82,12 @@ function mqttServer() {
         console.log('One client connected');
         
         client.on('connect', function () {
-            console.log('Connessione avvenuta con successo al broker MQTT');
+            console.log('Successfully connected to the MQTT broker');
             client.subscribe('dataForMonitorFV', function (err) {
                 if (err) {
-                    console.error('Errore durante la sottoscrizione a dataForMonitorFV', err);
+                    console.error('Error subscribing to dataForMonitorFV', err);
                 } else {
-                    console.log('Sottoscrizione avvenuta con successo a dataForMonitorFV');
+                    console.log('Successfully subscribed to dataForMonitorFV');
                 }
             });
         });
@@ -103,7 +102,7 @@ function mqttServer() {
         });
 
         client.on('error', function (error) {
-            console.error('Errore di connessione MQTT', error.message);
+            console.error('MQTT connection error', error.message);
             const errJson = {
                 error: "Home Assistant MQTT Error Connection",
             };
@@ -146,12 +145,11 @@ function main() {
     } else if (mode === 'mqtt') {
         mqttServer();
     } else {
-        console.error("Errore: parametro non valido. Usa 'api' o 'mqtt'.");
+        console.error("Error: invalid parameter. Use 'api' or 'mqtt'.");
     }
 }
 
 main();
-
 
 // Endpoint to check the status of the server
 app.get('/server-status', (req, res) => {
