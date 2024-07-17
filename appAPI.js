@@ -41,7 +41,7 @@ io.on('connection', (socket) => {
                 lg_percentuale_di_carica: getValueById(response.data, "sensor.lg_percentuale_di_carica"),
                 shelly_consumo_boiler: getValueById(response.data, "sensor.shelly_consumo_boiler"),
                 car_corsa_energy_level: getValueById(response.data, "sensor.car_corsa_energy_level"),
-                prism_stato: getValueById(response.data, "sensor.prism_stato"),
+                prism_plug_state: getValueById(response.data, "sensor.prism_stato"),
                 prism_potenza_di_carica: getValueById(response.data, "sensor.prism_potenza_di_carica"),
                 car_corsa_last_update: getValueById(response.data, "sensor.car_corsa_last_update"),
 
