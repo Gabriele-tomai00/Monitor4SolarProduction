@@ -27,12 +27,12 @@ const carValuePowerDiv = document.getElementById("unit-car-power");
 const carValueLastUpdate = document.getElementById("car-last-update");
 const wallboxPlugStateDiv = document.getElementById("prism-plug-state");
 const boilerValuePowerDiv = document.getElementById("unit-boiler-power");
-
+hidePageUnitlData();
 // });
 // socket.on riceve i dati aggiornati secondo le regole del server (ogni 2 secondi) 
 socket.on('dati', (data) => {
    //console.log(data);
-
+   //console.log("reciver_mode: ", data['reciver_mode']);
    if (hasError(data)) {
       pvGeneration = "..."; //getValueById(data, "sensor.solaredge_potenza_totale_dc"); console.log("pvGeneration: " + pvGeneration);
       gridSensor = "...";
@@ -59,14 +59,15 @@ socket.on('dati', (data) => {
       boilerPower = data['shelly_consumo_boiler'];
       // car
       carBatteryPercentge = data['car_corsa_energy_level'];
-      carState = data['prism_stato'];
+      carPlugState = data['prism_plug_state'];
       wallboxChargePower = data['prism_potenza_di_carica'];
       wallboxPlugState = data['prism_plug_state'];
       lastUpdatePSA = data['car_corsa_last_update'];
       //console.log("wallboxChargePower: " + wallboxChargePower);
 
+
+      showPageAfterData();
       // SET VALUE IN HTML //
-      // fvValueDiv.textContent = pvGeneration.value + " kw";
       setRoundValue("fv-value", roundValue(pvGeneration));
       setRoundValue("grid-value", roundValue(gridSensor));
       setRoundValue("grid-value-alert", roundValue(gridSensor));
@@ -200,6 +201,19 @@ function hasError(json) {
    }
 }
 
+
+function hidePageUnitlData() {
+   var bodyPage = document.getElementById("bodyPageWithoutAlert");
+   if (bodyPage.style.filter !== 'blur(25px)') {
+      bodyPage.style.filter = 'blur(25px)';
+   }
+   bodyPage.style.filter = 'blur(25px)';
+
+}
+function showPageAfterData() {
+   var bodyPage = document.getElementById("bodyPageWithoutAlert");
+   bodyPage.style.filter = 'none';
+}
 
 function showConnectionAPIAlert() {
    var bodyPage = document.getElementById("bodyPageWithoutAlert");
