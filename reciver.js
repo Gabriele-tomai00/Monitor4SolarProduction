@@ -235,6 +235,6 @@ function hideConnectionAPIAlert() {
    var avviso = document.getElementById("internetConnectionAlert");
    avviso.style.display = "none";
 
-   var avviso = document.getElementById("bodyPageWithoutAlert");
-   avviso.style.filter = 'none';
+   var bodyPage = document.getElementById("bodyPageWithoutAlert");
+   bodyPage.style.filter = 'none';
 }
