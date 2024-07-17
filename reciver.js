@@ -8,7 +8,7 @@ let batteryPVpercentage;
 let boilerPower;
 // car
 let carBatteryPercentge;
-let carState;
+let carPlugState;
 let wallboxChargePower;
 let wallboxPlugState;
 let lastUpdatePSA;
@@ -42,7 +42,7 @@ socket.on('dati', (data) => {
       boilerPower = "...";
       // car
       carBatteryPercentge = "...";
-      carState = "...";
+      carPlugState = "...";
       wallboxChargePower = "...";
       lastUpdatePSA = "...";
       // APPARE ALERT CON SCRITTO "IMMPOSSIBILE COMUNICARE CON IL SERVER"
@@ -94,7 +94,7 @@ socket.on('dati', (data) => {
 
 
       updateEnergyBar(roundValue(pvGeneration));
-      ChangeCarIcon(carState, wallboxChargePower);
+      ChangeCarIcon(carPlugState, wallboxChargePower);
       boilerIcon(boilerPower);
       updateArrowVisibility(roundValue(pvGeneration), roundValue(gridSensor), roundValue(homeConsumption), roundValue(batteryPVchargeDischarge));
       updateBatteryLevel(batteryPVpercentage);
