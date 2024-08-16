@@ -80,12 +80,12 @@ socket.on('dati', (data) => {
       //house
       houseValuePowerDiv.textContent = roundValue(homeConsumption) + " kw";
       //car
-      carValuePercentageDiv.textContent = carBatteryPercentge + "%";
-      carValuePercentageDivInModal.textContent = carBatteryPercentge + "%";
-      carValuePercentageDivInModal.textContent = carBatteryPercentge + "%";
-      carValueLastUpdate.textContent = lastUpdatePSA;
-      carValuePowerDiv.textContent = wallboxChargePower + " kw";
-      wallboxPlugStateDiv.textContent = wallboxPlugState;
+      carValuePercentageDiv.textContent = ifNotUnavailable(carBatteryPercentge + "%");
+      carValuePercentageDivInModal.textContent = ifNotUnavailable(carBatteryPercentge + "%");
+      carValuePercentageDivInModal.textContent = ifNotUnavailable(carBatteryPercentge + "%");
+      carValueLastUpdate.textContent = ifNotUnavailable(lastUpdatePSA);
+      carValuePowerDiv.textContent = ifNotUnavailable(wallboxChargePower + " kw");
+      wallboxPlugStateDiv.textContent = ifNotUnavailable(wallboxPlugState);
       if (wallboxPlugState === "Scollegata") {
          wallboxPlugStateDiv.style.color = "red"; // Testo in rosso
       } else {
@@ -168,11 +168,13 @@ function setRoundValue(idHtml, value) {
 
 function roundValue(value) {
    //console.log("value dentro roundValue: " + value);
-   if (value == "..." || value == "NaN" || value == "Undefined" || value == "undefined" || value == "Unavailable" || value == "unavailable" || isNaN(value)) {
-      //console.log("errore letura valore durante il roundValue(): " + value);
-      //console.log("OFFLINE");
-      return "...";
-   }
+   // if (value == "..." || value == "NaN" || value == "Undefined" || value == "undefined" || value == "Unavailable" || value == "unavailable" || isNaN(value)) {
+   //    //console.log("errore letura valore durante il roundValue(): " + value);
+   //    //console.log("OFFLINE");
+   //    return "...";
+   // }
+   if (ifNotUnavailable(value) == "non disponible")
+      return "non disponible";
    let numericValue;
    try {
       numericValue = parseFloat(value);
@@ -237,4 +239,14 @@ function hideConnectionAPIAlert() {
 
    var bodyPage = document.getElementById("bodyPageWithoutAlert");
    bodyPage.style.filter = 'none';
+}
+
+function ifNotUnavailable(str) {
+   // Regex per cercare "unavailable" indipendentemente dal formato
+   const regex = /\bunavailable\b/i;
+   // Testa la stringa con la regex
+   if(regex.test(str))
+      return "non disponibile";
+   else
+      return str;
 }
