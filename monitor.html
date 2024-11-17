@@ -12,17 +12,16 @@
          <div class="energy-bar" data-energy="0">
             <div class="energy-fill"></div>
             <div class="energy-value" id="fv-value">... kw</div>
+            <div id="red-dot-alert">
+               <span id="red-text-alert">non<br>aggiornato</span> <!-- Testo sotto il pallino -->
+            </div>
+
          </div>
          <table>
             <tr id="row1">
                <td>
                   <div class="cell-content">
-                     <!-- <img id="arrowFVtoGrid" class="arrow_icon" src="img/arrow_up_right_to_under_left.png" alt="Image 1"> -->
-                     <div class="box" id="box-ball-solar-to-grid">
-                        <div class="ball" id="ball-solar-to-grid"></div>
-                        <div class="path-balls" id="path1-ball-solar-to-grid"></div>
-                        <div class="path-balls" id="path2-ball-solar-to-grid"></div>
-
+                     <img id="arrowFVtoGrid" class="arrow_icon" src="img/arrow_up_right_to_under_left.png" alt="Image 1">
                      </div>   
                   </div>
                </td>
@@ -35,13 +34,7 @@
                </td>
                <td>
                   <div class="cell-content">
-                     <!-- <img id="arrowFVtoHouse" class="arrow_icon" src="img/arrow_up_left_to_under_right.png" alt="Image 3"> -->
-                     <div class="box" id="box-ball-solar-to-house">
-                        <div class="ball" id="ball-solar-to-house"></div>
-                           <div class="path-balls" id="path1-ball-solar-to-house"></div>
-                           <div class="path-balls" id="path2-ball-solar-to-house"></div>
-
-                     </div>   
+                     <img id="arrowFVtoHouse" class="arrow_icon" src="img/arrow_up_left_to_under_right.png" alt="Image 3">  
                   </div>
                </td>
             </tr>
@@ -56,18 +49,8 @@
                </td>
                <td>
                   <div class="cell-content">
-                     <!-- <img id="arrowFVtoBattery" class="arrow_icon" src="img/arrow_up_to_under.png" alt="Image 2">
-                     <img src="img/arrow_left_to_right.png" id="arrowGridToHouse" alt="arrow Grid to House"> -->
-
-                     <div class="box" id="box-ball-solar-to-battery">
-                        <div class="ball" id="ball-solar-to-battery"></div>
-                        <!-- <div class="ball" id="ball-solar-to-battery-2"></div> -->
-                        <div class="path-balls" id="path-ball-solar-to-battery"></div>
-                     </div>    
-                     <div class="box" id="box-ball-grid-to-house">
-                        <div class="ball" id="ball-grid-to-house"></div>
-                        <div class="path-balls" id="path-ball-grid-to-house"></div>
-                     </div>   
+                     <img id="arrowFVtoBattery" class="arrow_icon" src="img/arrow_up_to_under.png" alt="Image 2">
+                     <img src="img/arrow_left_to_right.png" id="arrowGridToHouse" alt="arrow Grid to House">
 
                   </div>
                </td>
@@ -99,12 +82,7 @@
                </td>
                <td>
                   <div class="cell-content">
-                     <!-- <img id="arrowBatteryToHouse" class="arrow_icon" src="img/arrow_under_left_to_up_right.png" alt="Image 4"> -->
-                     <div class="box" id="box-ball-battery-to-house">
-                        <div class="ball" id="ball-battery-to-house"></div>
-                           <div class="path-balls" id="path1-ball-battery-to-house"></div>
-                           <div class="path-balls" id="path2-ball-battery-to-house"></div>
-                     </div>   
+                    <img id="arrowBatteryToHouse" class="arrow_icon" src="img/arrow_under_left_to_up_right.png" alt="Image 4"> 
                   </div>
                </td>
             </tr>

@@ -13,12 +13,6 @@ let wallboxChargePower;
 let wallboxPlugState;
 let lastUpdatePSA;
 
-// new for balls
-let solar_panel_to_grid;
-let solar_panel_to_house;
-let solar_panel_to_battery;
-let solar_grid_to_house;
-
 // GET HTML DIV //
 const houseValuePowerDiv = document.getElementById("unit-house-power");
 const carValuePercentageDiv = document.getElementById("unit-car-percentage");
@@ -103,20 +97,10 @@ socket.on('dati', (data) => {
       updateBatteryLevel(batteryPVpercentage);
       updateWeatherImage(roundValue(pvGeneration));
       checkForEnergyAlert(roundValue(gridSensor), wallboxChargePower.value);
-
-      // new for balls
-      solar_panel_to_grid = data['solar_panel_to_grid']; 
-      solar_panel_to_house = data['solar_panel_to_house']; 
-      solar_panel_to_battery = data['solar_panel_to_battery']; 
-      solar_grid_to_house = data['solar_grid_to_house']; 
-
       // console.log("solar_panel_to_grid: ", solar_panel_to_grid);
       // console.log(solar_panel_to_house);
       // console.log(solar_panel_to_battery);
       // console.log("solar_grid_to_house: ", solar_grid_to_house);
-
-      updateBallsSpeed(solar_panel_to_grid, solar_panel_to_house, solar_panel_to_battery, solar_grid_to_house);
-
    }
 
 });

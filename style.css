@@ -266,7 +266,29 @@ td {
 		font-size: 2em;
 	}
 }
+#red-dot-alert {
+    position: absolute;
+    top: 50%; /* Centra verticalmente */
+    right: 40px; /* Posiziona il pallino vicino al bordo destro */
+    transform: translateY(-50%);
+    width: 30px; /* Larghezza del pallino */
+    height: 30px; /* Altezza del pallino */
+    background-color: red; /* Colore rosso */
+    border-radius: 50%; /* Rende il pallino circolare */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Ombra per un effetto 3D */
+    text-align: center; /* Centra il testo rispetto al pallino */
+}
 
+#red-text-alert {
+    position: absolute;
+    top: 105%; /* Sposta la scritta appena sotto il pallino */
+    left: 50%; /* Centra la scritta rispetto al pallino */
+    transform: translateX(-50%); /* Allinea il testo al centro del pallino */
+    font-size: 18px; /* Dimensione piccola */
+    color: red; /* Colore rosso */
+    font-weight: bold; /* Grassetto */
+    white-space: nowrap; /* Impedisce che il testo vada a capo */
+}
 /* ******************** BATTERY *************************** */
 #battery-graphic-container {
 	max-width: 100%;
@@ -519,177 +541,6 @@ td {
 	}
 }
 
-
-
-/* ******************* NEW ARROW WITH ANIMATED BALLS *************************** */
-
-.path-balls {
-	position: relative;
-	background-color: black;
-  }
-
-.box {
-	width: 250px;
-	height: 250px;
-	/* border: 2px solid black; */
-	}
-	.ball {
-	position: relative;
-	top: 0;
-	left: 0;
-	width: 25px;
-	height: 25px;
-	background: black;
-	border-radius: 50%;
-	}
-
-    #ball-solar-to-house {
-        animation: moving-ball-solar-to-house 0.5s linear infinite;
-    }
-
-    @keyframes moving-ball-solar-to-house {
-        0% {
-            top: 100px;
-            left: 0;
-        }
-        50% {
-            top: 100px;
-            left: 100px;
-        }
-        100% {
-            top: 200px;
-            left: 100px;
-        }
-    }
-
-	#path1-ball-solar-to-house {
-		top: 85px;
-		left: 9px;
-		width: 105px; 
-		height: 2px; 
-	  }
-	  #path2-ball-solar-to-house {
-		top: 85px;
-		left: 112px;
-		width: 2px; 
-		height: 105px;
-	  }
-
-
-    #ball-solar-to-grid {
-        animation: moving-ball-solar-to-grid 1s linear infinite;
-    }
-
-    @keyframes moving-ball-solar-to-grid {
-        0% {
-            top: 100px;
-            left: 200px;
-        }
-        50% {
-            top: 100px;
-            left: 100px;
-        }
-        100% {
-            top: 200px;
-            left: 100px;
-        }
-    }
-
-	#path1-ball-solar-to-grid {
-		top: 85px;
-		left: 112px;
-		width: 112px; 
-		height: 2px; 
-	  }
-	#path2-ball-solar-to-grid {
-		top: 85px;
-		left: 112px;
-		width: 2px; 
-		height: 105px; 
-	}
-
-    #ball-solar-to-battery {
-        animation: moving-ball-solar-to-battery 2s linear infinite;
-    }
-    /* #ball-solar-to-battery-2 {
-		background: gray;
-        animation: moving-ball-solar-to-battery 2s linear infinite;
-		animation-delay: 0.5s;
-    } */
-
-    @keyframes moving-ball-solar-to-battery {
-        0% {
-            top: 0;
-            left: 100px;
-        }
-
-        100% {
-            top: 180px;
-            left: 100px;
-        }
-    }
-
-    #ball-grid-to-house {
-        animation: moving-ball-grid-to-house 2s linear infinite;
-    }
-
-	#path-ball-solar-to-battery {
-		top: -20px;
-		left: 112px;
-		width: 2px;
-		height: 189px;
-	}
-
-    @keyframes moving-ball-grid-to-house {
-        0% {
-            top: 100px;
-            left: 0;
-        }
-        100% {
-            top: 100px;
-            left: 200px;
-        }
-    }
-
-	#path-ball-grid-to-house {
-		top: 85px;
-		left: 22px;
-		width: 190px; 
-		height: 2px; 
-	  }
-
-
-    #ball-battery-to-house {
-        animation: moving-ball-battery-to-house 2s linear infinite;
-    }
-
-    @keyframes moving-ball-battery-to-house {
-        0% {
-            top: 100px;
-            left: 0;
-        }
-        50% {
-            top: 100px;
-            left: 100px;
-        }
-        100% {
-            top: 0;
-            left: 100px;
-        }
-    }
-
-	#path1-ball-battery-to-house {
-		top: 85px;
-		left: 5px;
-		width: 108px; 
-		height: 2px; 
-	  }
-	  #path2-ball-battery-to-house {
-		top: -16px;
-		left: 112px;
-		width: 2px; 
-		height: 100px;
-	  }
 
 	
 

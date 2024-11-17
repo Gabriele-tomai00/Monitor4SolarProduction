@@ -60,16 +60,11 @@ function updateBatteryLevel(batteryPercentageValueDiv) {
  ////////////////////////// ARROWS //////////////////////////
  function updateArrowVisibility(fvValue, gridValue, houseValue, batteryValue) {
 
-   //  const arrowFVtoHouse = document.getElementById('arrowFVtoHouse');
-   //  const arrowFVtoBattery = document.getElementById('arrowFVtoBattery');
-   //  const arrowBatteryToHouse = document.getElementById('arrowBatteryToHouse');
-   //  const arrowGridToHouse = document.getElementById('arrowGridToHouse');
-   //  const arrowFVtoGrid = document.getElementById('arrowFVtoGrid');
-    const arrowFVtoHouse = document.getElementById('box-ball-solar-to-house');
-    const arrowFVtoBattery = document.getElementById('box-ball-solar-to-battery');
-    const arrowBatteryToHouse = document.getElementById('box-ball-battery-to-house');
-    const arrowGridToHouse = document.getElementById('box-ball-grid-to-house');
-    const arrowFVtoGrid = document.getElementById('box-ball-solar-to-grid');
+    const arrowFVtoHouse = document.getElementById('arrowFVtoHouse');
+    const arrowFVtoBattery = document.getElementById('arrowFVtoBattery');
+    const arrowBatteryToHouse = document.getElementById('arrowBatteryToHouse');
+    const arrowGridToHouse = document.getElementById('arrowGridToHouse');
+    const arrowFVtoGrid = document.getElementById('arrowFVtoGrid');
    //console.log(arrowFVtoBattery.style.display);
     // FV //
     if (fvValue >= 99 || houseValue >= 99 || batteryValue >= 999 || gridValue >= 99) {
@@ -109,18 +104,18 @@ function updateBatteryLevel(batteryPercentageValueDiv) {
     if (gridValue > 0) {
        arrowGridToHouse.style.display = 'block';
        arrowFVtoBattery.style.display = 'none';
-       // showValueAndUnit("grid-value", "unit-grid");
+       showValueAndUnit("grid-value", "unit-grid");
        showValueAndUnit("grid-value-and-unit");
  
     } else if (gridValue < 0) {
        arrowGridToHouse.style.display = 'none';
-       // showValueAndUnit("grid-value", "unit-grid");
+       showValueAndUnit("grid-value", "unit-grid");
        showValueAndUnit("grid-value-and-unit");
  
     } else {
        arrowGridToHouse.style.display = 'none';
        arrowFVtoGrid.style.display = 'none';
-       // hideValueAndUnit("grid-value", "unit-grid");
+       hideValueAndUnit("grid-value", "unit-grid");
        hideValueAndUnit("grid-value-and-unit");
  
     }
@@ -129,52 +124,26 @@ function updateBatteryLevel(batteryPercentageValueDiv) {
        arrowGridToHouse.style.display = 'none'; // per evitare conflitto con l'altra freccia
        arrowFVtoBattery.style.display = 'block';
        arrowBatteryToHouse.style.display = 'none';
-       // showValueAndUnit("battery-power-value", "unit-battery-power");
+       showValueAndUnit("battery-power-value", "unit-battery-power");
        showValueAndUnit("battery-power-value-and-unit");
  
     } else if (batteryValue < 0) {
        arrowFVtoBattery.style.display = 'none';
        arrowBatteryToHouse.style.display = 'block';
-       // showValueAndUnit("battery-power-value", "unit-battery-power");
+       showValueAndUnit("battery-power-value", "unit-battery-power");
        showValueAndUnit("battery-power-value-and-unit");
  
     } else {
        arrowFVtoBattery.style.display = 'none';
        arrowBatteryToHouse.style.display = 'none';
-       // hideValueAndUnit("battery-power-value", "unit-battery-power");
+       hideValueAndUnit("battery-power-value", "unit-battery-power");
        hideValueAndUnit("battery-power-value-and-unit");
        changeSizeBattery();
     }
  }
-
-
- function updateBallsSpeed(solar_panel_to_grid, solar_panel_to_house, solar_panel_to_battery, solar_grid_to_house) {
-   //console.log("solar_panel_to_grid: ", solar_panel_to_grid);
-   // console.log(solar_panel_to_house);
-   // console.log(solar_panel_to_battery);
-   // console.log("solar_grid_to_house: ", solar_grid_to_house);
-
-   //solar_panel_to_grid_kw solar_panel_to_house_kw solar_panel_to_battery_kw solar_grid_to_house_kw
-   changeBallsSpeed(solar_panel_to_grid, "ball-solar-to-grid");
-   changeBallsSpeed(solar_panel_to_house, "ball-solar-to-house");
-   changeBallsSpeed(solar_panel_to_battery, "ball-solar-to-battery");
-   changeBallsSpeed(solar_grid_to_house, "ball-grid-to-house");
- }
  
 
- function changeBallsSpeed(speedValue, ballId) {
-   if (speedValue>6)
-      speedValue = 6;
-   const ball = document.getElementById(ballId);
-   const maxSpeedValue = 6; // Max imput value
-   const maxSpeedSeconds = 0.5; // min time in seconds
-   const minSpeedSeconds = 3; // max time in seconds
 
-   const seconds = (speedValue / maxSpeedValue) * (maxSpeedSeconds - minSpeedSeconds) + minSpeedSeconds;
-
-   ball.style.animationDuration = `${seconds}s`;
- }
- 
  ////////////////////////// change weather icon //////////////////////////
  
  // Function to update the weather image based on fv-value
@@ -243,7 +212,7 @@ function updateBatteryLevel(batteryPercentageValueDiv) {
  function checkForEnergyAlert(gridValue, prismPower) {
     var avviso = document.getElementById("gridLimitAlert");
  
-    const audio = new Audio('sounds/alert-sound.mp3'); // Sostituisci 'alert_sound.mp3' con il percorso del tuo file audio
+    const audio = new Audio('sounds/alert-sound.mp3');
     if (prismPower > 0) {
        stopAlert(avviso, audio);
     } else {
@@ -261,7 +230,7 @@ function updateBatteryLevel(batteryPercentageValueDiv) {
           } else {
              const currentTimestamp = new Date().getTime();
              const differenceInSeconds = (currentTimestamp - parseInt(storedTimestamp)) / 1000;
-             if (differenceInSeconds >= 5) {
+             if (differenceInSeconds >= 12) {
                 console.warn("Sono passati più di 12 secondi!");
                 displayAlert(avviso)
              } else {
@@ -276,9 +245,10 @@ function updateBatteryLevel(batteryPercentageValueDiv) {
     signal.style.display = "block";
  
     var avviso = document.getElementById("bodyPageWithoutAlert");
-    avviso.style.filter = 'blur(5px)';
- 
+    //avviso.style.filter = 'blur(5px)';
     playAlertSound();
+
+
  }
  
  function stopAlert(signal, sound) {
@@ -325,20 +295,23 @@ function updateBatteryLevel(batteryPercentageValueDiv) {
  
  
  function showErrorNodeJSAlert() {
-    var avviso = document.getElementById("bodyPageWithoutAlert");
-    avviso.style.filter = 'blur(25px)';
+   //  var avviso = document.getElementById("bodyPageWithoutAlert");
+   //  avviso.style.filter = 'blur(25px)';
  
-    var avviso = document.getElementById("NodeJSAbsentConnectionAlert");
+   //  var avviso = document.getElementById("NodeJSAbsentConnectionAlert");
+   var avviso = document.getElementById("red-dot-alert");
     avviso.style.display = "block";
  }
  
  // Funzione per ripristinare la pagina web e nascondere l'alert
  function hideErrorNodeJSAlert() {
-    var avviso = document.getElementById("NodeJSAbsentConnectionAlert");
-    avviso.style.display = "none";
+   //  var avviso = document.getElementById("NodeJSAbsentConnectionAlert");
+   //  avviso.style.display = "none";
  
-    var avviso = document.getElementById("bodyPageWithoutAlert");
-    avviso.style.filter = 'none';
+   //  var avviso = document.getElementById("bodyPageWithoutAlert");
+   //  avviso.style.filter = 'none';
+   var avviso = document.getElementById("red-dot-alert");
+   avviso.style.display = "none";
  }
  
  /////////////////        MODAL        ///////////////////////
