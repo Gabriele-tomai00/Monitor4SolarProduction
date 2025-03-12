@@ -23,13 +23,16 @@ client.on('connect', function () {
 
 // Management of messages received from the MQTT broker
 client.on('message', function (topic, message) {
-    const jsonData = JSON.stringify(message.toString(), null, 2);
-    const validJsonString = jsonData.replace(/'/g, '"');
-    let stringWithoutQuotes = validJsonString.replace(/^["']|["']$/g, '');
-    const json = JSON.parse(stringWithoutQuotes);
-
-    io.emit('dati', json);
+    try {
+        const jsonData = JSON.parse(message.toString()); // Converts the message directly to JSON//+
+        console.log("json ricevuto:", jsonData);
+        io.emit('dati', jsonData);
+    } catch (error) {
+        console.error("Errore nel parsing del JSON:", error);
+        console.error("Messaggio ricevuto:", message.toString());
+    }
 });
+
 
 // Error management
 client.on('error', function (error) {
@@ -49,6 +52,11 @@ client.subscribe('dataForMonitorFV', function (err) {
         console.log('Successful subscription to dataForMonitorFV');
     }
 });
+
+client.on('close', () => console.log('MQTT connection closed'));
+client.on('offline', () => console.log('MQTT client offline'));
+client.on('reconnect', () => console.log('MQTT client reconnecting...'));
+
 
 app.use(express.static(__dirname));
 
