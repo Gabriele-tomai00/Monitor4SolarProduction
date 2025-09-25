@@ -7,13 +7,13 @@
   "author": "Gabriele Tomai",
   "dependencies": {
     "axios": "^1.6.8",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
     "http": "^0.0.1-security",
     "mqtt": "^5.5.3",
     "node-fetch": "^3.3.2",
     "nodemon": "^3.1.7",
-    "pm2": "^5.4.3",
+    "pm2": "^6.0.8",
     "socket.io": "^4.7.5"
   }
 }

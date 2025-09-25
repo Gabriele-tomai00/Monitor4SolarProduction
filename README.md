@@ -1,4 +1,10 @@
 # Monitor4FV (MQTT or API)
+## ⚠️ Project Status Notice ⚠️
+
+This repository is **no longer actively maintained**.  
+Please be aware that some dependencies may be outdated or insecure.  
+
+It is strongly recommended to ensure that your npm environment is updated before using this project.
 
 ## Introduction
 
@@ -21,14 +27,16 @@ You need the following dependencies: `http express socket.io mqtt axios dotenv`
 Create a file `.env` in the project root.
 ## Configuration of API VERSION
 
-If you decide to use `appAPI.js` then add the following fields to the `.env` file.```plaintext
+If you decide to use `appAPI.js` then add the following fields to the `.env` file.
+```plaintext
 # API
 ENDPOINT=your_endpoint
 TOKEN=your_token
 ```
 
 ## Configuration of MQTT VERSION
-If you decide to use `appAPI.js` then add the following fields to the `.env` file.```plaintext
+If you decide to use `appAPI.js` then add the following fields to the `.env` file.
+```plaintext
 # MQTT
 MQTT_USERNAME=mqtt_user
 MQTT_PASSWORD=your_pwd
