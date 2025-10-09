@@ -7,7 +7,7 @@
       <link rel="stylesheet" type="text/css" href="style.css">
       <title>Responsive Table Images with Text</title>
    </head>
-   <body>
+   <body> 
       <div id="bodyPageWithoutAlert">
          <div class="energy-bar" data-energy="0">
             <div class="energy-fill"></div>
@@ -22,8 +22,7 @@
                <td>
                   <div class="cell-content">
                      <img id="arrowFVtoGrid" class="arrow_icon" src="img/arrow_up_right_to_under_left.png" alt="Image 1">
-                     </div>   
-                  </div>
+                  </div>   
                </td>
                <td>
                   <div class="cell-content">
@@ -48,8 +47,7 @@
                <td>
                   <div class="cell-content">
                      <img id="arrowFVtoBattery" class="arrow_icon" src="img/arrow_up_to_under.png" alt="Image 2">
-                     <img src="img/arrow_left_to_right.png" id="arrowGridToHouse" alt="arrow Grid to House">
-
+                     <img id="arrowGridToHouse" class="arrow_icon" src="img/arrow_left_to_right.png"  alt="arrow Grid to House">
                   </div>
                </td>
                <td>
@@ -63,6 +61,10 @@
             </tr>
             <tr id="row3">
                <td>
+                  <div class="cell-content">
+                     <img id="arrowGridtoBattery" class="arrow_icon" src="img/arrow_up_left_to_under_right_grid_to_battery.png" alt="arrow grid to battery">
+                     <img id="arrowBatteryToGrid" class="arrow_icon" src="img/arrow_under_left_to_up_right_battery_to_grid.png"  alt="arrow battery to grid">
+                  </div>
                </td>
                <td>
                   <div id="battery-graphic-container">
@@ -105,7 +107,6 @@
                         </div>
                      </div>
                   </div>
-      </div>
       </td>
       </tr>
       </table>
@@ -166,7 +167,6 @@
                </div>
             </div>
          </div>
-      </div>
       </div>
       <script>
          function toggleVisibility() {

@@ -25,7 +25,7 @@ client.on('connect', function () {
 client.on('message', function (topic, message) {
     try {
         const jsonData = JSON.parse(message.toString()); // Converts the message directly to JSON//+
-        console.log("json ricevuto:", jsonData);
+        //console.log("json ricevuto:", jsonData);
         io.emit('dati', jsonData);
     } catch (error) {
         console.error("Errore nel parsing del JSON:", error);

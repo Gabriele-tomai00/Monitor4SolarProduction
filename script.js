@@ -65,84 +65,231 @@ function updateBatteryLevel(batteryPercentageValueDiv) {
     const arrowBatteryToHouse = document.getElementById('arrowBatteryToHouse');
     const arrowGridToHouse = document.getElementById('arrowGridToHouse');
     const arrowFVtoGrid = document.getElementById('arrowFVtoGrid');
-   //console.log(arrowFVtoBattery.style.display);
-    // FV //
-    if (fvValue >= 99 || houseValue >= 99 || batteryValue >= 999 || gridValue >= 99) {
-       //console.log("primo");
-       arrowFVtoHouse.style.display = 'none';
-       arrowFVtoBattery.style.display = 'none';
-       arrowFVtoGrid.style.display = 'none';
-    }
- 
-    if (fvValue > 0 && houseValue > 0 && batteryValue < 0 && gridValue < 0) {
-       //console.log("primo");
-       arrowFVtoHouse.style.display = 'block';
-       arrowFVtoBattery.style.display = 'block';
-       arrowFVtoGrid.style.display = 'block';
-    } else if (fvValue > 0 && houseValue > 0 && batteryValue < 0 && (gridValue > 0 || isZeroValue(gridValue))) {
-       //console.log("secondo");
-       arrowFVtoHouse.style.display = 'block';
-       arrowFVtoBattery.style.display = 'block';
-       arrowFVtoGrid.style.display = 'none';
-    } else if (fvValue > 0 && houseValue > 0 && (batteryValue > 0 || isZeroValue(batteryValue)) && (gridValue > 0 || isZeroValue(gridValue))) {
-       //console.log("terzo");
-       arrowFVtoHouse.style.display = 'block';
-       arrowFVtoBattery.style.display = 'none';
-       arrowFVtoGrid.style.display = 'none';
-    } else if (fvValue > 0 && houseValue > 0 && (batteryValue > 0 || isZeroValue(batteryValue)) && gridValue < 0) {
-       //console.log("quarto");
-       arrowFVtoHouse.style.display = 'block';
-       arrowFVtoGrid.style.display = 'block';
-       arrowFVtoBattery.style.display = 'none';
-    } else {
-       //console.log("nascondi tutto");
-       arrowFVtoHouse.style.display = 'none';
-       arrowFVtoBattery.style.display = 'none';
-       arrowFVtoGrid.style.display = 'none';
-    }
-    // grid //
-    if (gridValue > 0) {
-       arrowGridToHouse.style.display = 'block';
-       arrowFVtoBattery.style.display = 'none';
-       showValueAndUnit("grid-value", "unit-grid");
-       showValueAndUnit("grid-value-and-unit");
- 
-    } else if (gridValue < 0) {
-       arrowGridToHouse.style.display = 'none';
-       showValueAndUnit("grid-value", "unit-grid");
-       showValueAndUnit("grid-value-and-unit");
- 
-    } else {
-       arrowGridToHouse.style.display = 'none';
-       arrowFVtoGrid.style.display = 'none';
-       hideValueAndUnit("grid-value", "unit-grid");
-       hideValueAndUnit("grid-value-and-unit");
- 
-    }
-    // battery //
-    if (batteryValue > 0) {
-       arrowGridToHouse.style.display = 'none'; // per evitare conflitto con l'altra freccia
-       arrowFVtoBattery.style.display = 'block';
-       arrowBatteryToHouse.style.display = 'none';
-       showValueAndUnit("battery-power-value", "unit-battery-power");
-       showValueAndUnit("battery-power-value-and-unit");
- 
-    } else if (batteryValue < 0) {
-       arrowFVtoBattery.style.display = 'none';
-       arrowBatteryToHouse.style.display = 'block';
-       showValueAndUnit("battery-power-value", "unit-battery-power");
-       showValueAndUnit("battery-power-value-and-unit");
- 
-    } else {
-       arrowFVtoBattery.style.display = 'none';
-       arrowBatteryToHouse.style.display = 'none';
-       hideValueAndUnit("battery-power-value", "unit-battery-power");
-       hideValueAndUnit("battery-power-value-and-unit");
-       changeSizeBattery();
-    }
- }
- 
+    const arrowBatteryToGrid = document.getElementById('arrowBatteryToGrid');
+    const arrowGridtoBattery = document.getElementById('arrowGridtoBattery');
+   
+if (fvValue > 0 && gridValue > 0 && houseValue > 0 && batteryValue < 0) {
+    arrowFVtoHouse.style.display = 'block';
+    arrowFVtoBattery.style.display = 'none';
+    arrowBatteryToHouse.style.display = 'block';
+    arrowGridToHouse.style.display = 'none';
+    arrowFVtoGrid.style.display = 'none';
+    arrowBatteryToGrid.style.display = 'none';
+    arrowGridtoBattery.style.display = 'none';
+} else if (fvValue > 0 && gridValue > 0 && houseValue === 0 && batteryValue > 0) {
+    arrowFVtoHouse.style.display = 'none';
+    arrowFVtoBattery.style.display = 'none';
+    arrowBatteryToHouse.style.display = 'none';
+    arrowGridToHouse.style.display = 'none';
+    arrowFVtoGrid.style.display = 'none';
+    arrowBatteryToGrid.style.display = 'none';
+    arrowGridtoBattery.style.display = 'block';
+} else if (fvValue > 0 && gridValue === 0 && houseValue > 0 && batteryValue > 0) {
+    arrowFVtoHouse.style.display = 'block';
+    arrowFVtoBattery.style.display = 'none';
+    arrowBatteryToHouse.style.display = 'block';
+    arrowGridToHouse.style.display = 'none';
+    arrowFVtoGrid.style.display = 'none';
+    arrowBatteryToGrid.style.display = 'none';
+    arrowGridtoBattery.style.display = 'none';
+} else if (fvValue > 0 && gridValue === 0 && houseValue > 0 && batteryValue === 0) {
+    arrowFVtoHouse.style.display = 'block';
+    arrowFVtoBattery.style.display = 'none';
+    arrowBatteryToHouse.style.display = 'none';
+    arrowGridToHouse.style.display = 'none';
+    arrowFVtoGrid.style.display = 'none';
+    arrowBatteryToGrid.style.display = 'none';
+    arrowGridtoBattery.style.display = 'none';
+} else if (fvValue > 0 && gridValue === 0 && houseValue > 0 && batteryValue < 0) {
+    arrowFVtoHouse.style.display = 'block';
+    arrowFVtoBattery.style.display = 'none';
+    arrowBatteryToHouse.style.display = 'block';
+    arrowGridToHouse.style.display = 'none';
+    arrowFVtoGrid.style.display = 'none';
+    arrowBatteryToGrid.style.display = 'none';
+    arrowGridtoBattery.style.display = 'none';
+} else if (fvValue > 0 && gridValue < 0 && houseValue > 0 && batteryValue > 0) {
+    arrowFVtoHouse.style.display = 'block';
+    arrowFVtoBattery.style.display = 'block';
+    arrowBatteryToHouse.style.display = 'none';
+    arrowGridToHouse.style.display = 'none';
+    arrowFVtoGrid.style.display = 'block';
+    arrowBatteryToGrid.style.display = 'none';
+    arrowGridtoBattery.style.display = 'none';
+} else if (fvValue > 0 && gridValue < 0 && houseValue > 0 && batteryValue === 0) {
+    arrowFVtoHouse.style.display = 'block';
+    arrowFVtoBattery.style.display = 'none';
+    arrowBatteryToHouse.style.display = 'none';
+    arrowGridToHouse.style.display = 'none';
+    arrowFVtoGrid.style.display = 'block';
+    arrowBatteryToGrid.style.display = 'none';
+    arrowGridtoBattery.style.display = 'none';
+} else if (fvValue > 0 && gridValue < 0 && houseValue > 0 && batteryValue < 0) {
+    arrowFVtoHouse.style.display = 'block';
+    arrowFVtoBattery.style.display = 'none';
+    arrowBatteryToHouse.style.display = 'block';
+    arrowGridToHouse.style.display = 'none';
+    arrowFVtoGrid.style.display = 'block';
+    arrowBatteryToGrid.style.display = 'none';
+    arrowGridtoBattery.style.display = 'none';
+} else if (fvValue > 0 && gridValue < 0 && houseValue === 0 && batteryValue > 0) {
+    arrowFVtoHouse.style.display = 'none';
+    arrowFVtoBattery.style.display = 'block';
+    arrowBatteryToHouse.style.display = 'none';
+    arrowGridToHouse.style.display = 'none';
+    arrowFVtoGrid.style.display = 'block';
+    arrowBatteryToGrid.style.display = 'none';
+    arrowGridtoBattery.style.display = 'block';
+} else if (fvValue > 0 && gridValue < 0 && houseValue === 0 && batteryValue === 0) {
+    arrowFVtoHouse.style.display = 'none';
+    arrowFVtoBattery.style.display = 'none';
+    arrowBatteryToHouse.style.display = 'none';
+    arrowGridToHouse.style.display = 'none';
+    arrowFVtoGrid.style.display = 'block';
+    arrowBatteryToGrid.style.display = 'none';
+    arrowGridtoBattery.style.display = 'none';
+} else if (fvValue > 0 && gridValue < 0 && houseValue === 0 && batteryValue < 0) {
+    arrowFVtoHouse.style.display = 'none';
+    arrowFVtoBattery.style.display = 'none';
+    arrowBatteryToHouse.style.display = 'none';
+    arrowGridToHouse.style.display = 'none';
+    arrowFVtoGrid.style.display = 'block';
+    arrowBatteryToGrid.style.display = 'block';
+    arrowGridtoBattery.style.display = 'none';
+} else if (fvValue === 0 && gridValue > 0 && houseValue > 0 && batteryValue > 0) {
+    arrowFVtoHouse.style.display = 'none';
+    arrowFVtoBattery.style.display = 'none';
+    arrowBatteryToHouse.style.display = 'none';
+    arrowGridToHouse.style.display = 'block';
+    arrowFVtoGrid.style.display = 'none';
+    arrowBatteryToGrid.style.display = 'none';
+    arrowGridtoBattery.style.display = 'block';
+} else if (fvValue === 0 && gridValue > 0 && houseValue > 0 && batteryValue === 0) {
+    arrowFVtoHouse.style.display = 'none';
+    arrowFVtoBattery.style.display = 'none';
+    arrowBatteryToHouse.style.display = 'none';
+    arrowGridToHouse.style.display = 'block';
+    arrowFVtoGrid.style.display = 'none';
+    arrowBatteryToGrid.style.display = 'none';
+    arrowGridtoBattery.style.display = 'none';
+} else if (fvValue === 0 && gridValue > 0 && houseValue > 0 && batteryValue < 0) {
+    arrowFVtoHouse.style.display = 'none';
+    arrowFVtoBattery.style.display = 'none';
+    arrowBatteryToHouse.style.display = 'block';
+    arrowGridToHouse.style.display = 'block';
+    arrowFVtoGrid.style.display = 'none';
+    arrowBatteryToGrid.style.display = 'none';
+    arrowGridtoBattery.style.display = 'none';
+} else if (fvValue === 0 && gridValue > 0 && houseValue === 0 && batteryValue > 0) {
+    arrowFVtoHouse.style.display = 'none';
+    arrowFVtoBattery.style.display = 'none';
+    arrowBatteryToHouse.style.display = 'none';
+    arrowGridToHouse.style.display = 'none';
+    arrowFVtoGrid.style.display = 'none';
+    arrowBatteryToGrid.style.display = 'none';
+    arrowGridtoBattery.style.display = 'block';
+} else if (fvValue === 0 && gridValue === 0 && houseValue > 0 && batteryValue < 0) {
+    arrowFVtoHouse.style.display = 'none';
+    arrowFVtoBattery.style.display = 'none';
+    arrowBatteryToHouse.style.display = 'block';
+    arrowGridToHouse.style.display = 'none';
+    arrowFVtoGrid.style.display = 'none';
+    arrowBatteryToGrid.style.display = 'none';
+    arrowGridtoBattery.style.display = 'none';
+} else if (fvValue === 0 && gridValue < 0 && houseValue > 0 && batteryValue > 0) {
+    arrowFVtoHouse.style.display = 'none';
+    arrowFVtoBattery.style.display = 'none';
+    arrowBatteryToHouse.style.display = 'block';
+    arrowGridToHouse.style.display = 'none';
+    arrowFVtoGrid.style.display = 'none';
+    arrowBatteryToGrid.style.display = 'block';
+    arrowGridtoBattery.style.display = 'none';
+} else if (fvValue === 0 && gridValue < 0 && houseValue > 0 && batteryValue < 0) {
+    arrowFVtoHouse.style.display = 'none';
+    arrowFVtoBattery.style.display = 'none';
+    arrowBatteryToHouse.style.display = 'block';
+    arrowGridToHouse.style.display = 'none';
+    arrowFVtoGrid.style.display = 'none';
+    arrowBatteryToGrid.style.display = 'block';
+    arrowGridtoBattery.style.display = 'none';
+} else if (fvValue === 0 && gridValue < 0 && houseValue === 0 && batteryValue < 0) {
+    arrowFVtoHouse.style.display = 'none';
+    arrowFVtoBattery.style.display = 'none';
+    arrowBatteryToHouse.style.display = 'none';
+    arrowGridToHouse.style.display = 'none';
+    arrowFVtoGrid.style.display = 'none';
+    arrowBatteryToGrid.style.display = 'block';
+    arrowGridtoBattery.style.display = 'none';
+} else if (fvValue > 0 && gridValue > 0 && houseValue > 0 && batteryValue > 0) {
+    arrowFVtoHouse.style.display = 'block';
+    arrowFVtoBattery.style.display = 'none';
+    arrowBatteryToHouse.style.display = 'none';
+    arrowGridToHouse.style.display = 'block';
+    arrowFVtoGrid.style.display = 'none';
+    arrowBatteryToGrid.style.display = 'none';
+    arrowGridtoBattery.style.display = 'block';
+//
+// --- CASI IMPOSSIBILI ---
+//
 
+} else if (fvValue > 0 && gridValue > 0 && houseValue > 0 && batteryValue === 0) {
+    console.log("2 Impossibile");
+} else if (fvValue > 0 && gridValue > 0 && houseValue === 0 && batteryValue === 0) {
+    console.log("3 Impossibile");
+} else if (fvValue > 0 && gridValue > 0 && houseValue === 0 && batteryValue < 0) {
+    console.log("4 Impossibile");
+} else if (fvValue > 0 && gridValue === 0 && houseValue === 0 && batteryValue > 0) {
+    console.log("5 Impossibile");
+} else if (fvValue > 0 && gridValue === 0 && houseValue === 0 && batteryValue === 0) {
+    console.log("6 Impossibile");
+} else if (fvValue > 0 && gridValue === 0 && houseValue === 0 && batteryValue < 0) {
+    console.log("7 Impossibile");
+} else if (fvValue === 0 && gridValue > 0 && houseValue === 0 && batteryValue === 0) {
+    console.log("8 Impossibile");
+} else if (fvValue === 0 && gridValue > 0 && houseValue === 0 && batteryValue < 0) {
+    console.log("9 Impossibile");
+} else if (fvValue === 0 && gridValue === 0 && houseValue > 0 && batteryValue > 0) {
+    console.log("10 Impossibile");
+} else if (fvValue === 0 && gridValue === 0 && houseValue > 0 && batteryValue === 0) {
+    console.log("11 Impossibile");
+} else if (fvValue === 0 && gridValue === 0 && houseValue === 0 && batteryValue > 0) {
+    console.log("12 Impossibile");
+} else if (fvValue === 0 && gridValue === 0 && houseValue === 0 && batteryValue === 0) {
+    console.log("13 Impossibile");
+} else if (fvValue === 0 && gridValue === 0 && houseValue === 0 && batteryValue < 0) {
+    console.log("14 Impossibile");
+} else if (fvValue === 0 && gridValue < 0 && houseValue > 0 && batteryValue === 0) {
+    console.log("15 Impossibile");
+} else if (fvValue === 0 && gridValue < 0 && houseValue === 0 && batteryValue > 0) {
+    console.log("16 Impossibile");
+} else if (fvValue === 0 && gridValue < 0 && houseValue === 0 && batteryValue === 0) {
+    console.log("17 Impossibile");
+}else {
+    console.log("Combinazione non gestita");
+}
+
+
+
+   if (gridValue > 0 || gridValue < 0) {
+       showValueAndUnitByID("grid-value-and-unit");
+   } else {
+       hideValueAndUnitByID("grid-value-and-unit");
+   }
+
+   if (batteryValue > 0 || batteryValue < 0) {
+       showValueAndUnitByID("battery-power-value-and-unit");
+   } else {
+       hideValueAndUnitByID("battery-power-value-and-unit");
+   }
+
+   //  if (houseValue > 0 || houseValue < 0) {
+   //     showValueAndUnit("house-power-value", "unit-house-power");
+   //     hideValueAndUnitByID("house-value-and-unit");
+   //  } else {
+   //     hideValueAndUnit("house-power-value", "unit-house-power");
+   //     hideValueAndUnitByID("house-power-value-and-unit");
+   // }
+}
 
  ////////////////////////// change weather icon //////////////////////////
  
@@ -181,23 +328,11 @@ function updateBatteryLevel(batteryPercentageValueDiv) {
        return false;
  }
  
- function hideValueAndUnit(value, unit) {
-    document.getElementById(value).style.display = 'none';
-    document.getElementById(unit).style.display = 'none';
- }
- 
- function showValueAndUnit(value, unit) {
-    if (document.getElementById(value).style.display == "none") {
-       document.getElementById(value).style.display = 'block';
-       document.getElementById(unit).style.display = 'block';
-    }
- }
- 
- function hideValueAndUnit(id) {
+ function hideValueAndUnitByID(id) {
     document.getElementById(id).style.display = 'none';
  }
  
- function showValueAndUnit(id) {
+ function showValueAndUnitByID(id) {
     if (document.getElementById(id).style.display == "none") {
        document.getElementById(id).style.display = 'block';
     }

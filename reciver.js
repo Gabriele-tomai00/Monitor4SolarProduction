@@ -59,9 +59,6 @@ socket.on('dati', (data) => {
       lastUpdatePSA = data['car_corsa_last_update'];
       //console.log("wallboxChargePower: " + wallboxChargePower);
 
-      if (batteryPVchargeDischarge>0 && gridSensor>0) // buttery is charging and grid is importing energy: NOT POSSIBILE
-         gridSensor = 0;
-
       showPageAfterData();
       // SET VALUE IN HTML //
       setRoundValue("fv-value", roundValue(pvGeneration));
