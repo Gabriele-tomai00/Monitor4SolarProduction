@@ -18,6 +18,12 @@ table {
 	table-layout: fixed;
 }
 
+.arrow_icon {
+    margin-top: 40px;
+}
+img#arrowGridtoBattery {
+    margin-left: 60px;
+}
 th,
 td {
 	height: 350px;
