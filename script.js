@@ -86,8 +86,8 @@ if (fvValue > 0 && gridValue > 0 && houseValue > 0 && batteryValue < 0) {
     arrowGridtoBattery.style.display = 'block';
 } else if (fvValue > 0 && gridValue === 0 && houseValue > 0 && batteryValue > 0) {
     arrowFVtoHouse.style.display = 'block';
-    arrowFVtoBattery.style.display = 'none';
-    arrowBatteryToHouse.style.display = 'block';
+    arrowFVtoBattery.style.display = 'block';
+    arrowBatteryToHouse.style.display = 'none';
     arrowGridToHouse.style.display = 'none';
     arrowFVtoGrid.style.display = 'none';
     arrowBatteryToGrid.style.display = 'none';
@@ -224,7 +224,13 @@ if (fvValue > 0 && gridValue > 0 && houseValue > 0 && batteryValue < 0) {
     arrowFVtoHouse.style.display = 'block';
     arrowFVtoBattery.style.display = 'none';
     arrowBatteryToHouse.style.display = 'none';
-    arrowGridToHouse.style.display = 'block';
+    if (houseValue > fvValue) {
+      arrowGridToHouse.style.display = 'block';
+   } else {
+      arrowGridToHouse.style.display = 'none';
+      arrowFVtoBattery.style.display = 'block';
+   } 
+   if (fvValue )
     arrowFVtoGrid.style.display = 'none';
     arrowBatteryToGrid.style.display = 'none';
     arrowGridtoBattery.style.display = 'block';
