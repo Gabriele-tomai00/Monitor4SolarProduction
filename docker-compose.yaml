@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  my-node-app:
+    image: node:20-bullseye
+    container_name: monitor4fv
+    ports:
+      - "3100:3100"
+    volumes:
+      - /volume2/docker/monitor4fv/monitor4fv:/monitor4fv
+    working_dir: /monitor4fv
+    command: bash -c "apt update && apt install -y tmux && tmux new -s node_mqtt -d 'node appMQTT.js' && tail -f /dev/null"
+    tty: true
+    restart: 'always'
