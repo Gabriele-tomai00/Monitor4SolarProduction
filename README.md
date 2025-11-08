@@ -17,7 +17,7 @@ The idea stems from a family need: at my parents' house, we have a photovoltaic 
 Initially, I developed the API version, but then I realized that with **Home Assistant**, it is easier to use MQTT because I can send only the data that interests me and do so on a local network.  
 The web server must run on a single machine (even the same one as the browser), and it is possible to use multiple clients that, through the browser, display the monitor with the photovoltaic data.
 
-<img src="img/for_readme/c.jpg" alt="Alt text" width="350">
+<img src="app/img/for_readme/c.jpg" alt="Alt text" width="350">
 
 ## Dependencies
 You need to install `node` and `npm`.  
@@ -73,7 +73,7 @@ To start the web server, simply execute:
 I chose to use clear, iconic drawings and a very large font size to meet my parents' needs.  
 Remember that the purpose of this monitor is to be viewed on a wall-mounted tablet from a distance, not from a phone (although it is still possible to do so).
 
-<img src="img/for_readme/a.png" alt="Alt text" width="350">
+<img src="app/img/for_readme/a.png" alt="Alt text" width="350">
 
 ## Functions
 - Monitoring of: photovoltaic and storage production, grid consumption, home consumption;
@@ -85,9 +85,22 @@ Remember that the purpose of this monitor is to be viewed on a wall-mounted tabl
 ## Boiler
 When the boiler is on (detected power consumption greater than zero), a small icon appears at the bottom left, helping to understand the high household consumption. You can click on the icon to view a window with the boiler's instantaneous consumption.  
 
-<img src="img/for_readme/b.png" alt="Alt text" width="350">
+<img src="app/img/for_readme/b.png" alt="Alt text" width="350">
 
 ## Electric Car
 When the electric car is being charged and the charging power is greater than zero, an icon appears at the bottom right with the charging power and the car's battery percentage.  
 
-<img src="img/for_readme/d.png" alt="Alt text" width="350">
+<img src="app/img/for_readme/d.png" alt="Alt text" width="350">
+
+# Docker
+
+Run your Node.js server in a Docker container with automatic `tmux` session management.
+
+```bash
+# Stop any existing container and start a new one in detached mode
+sudo docker-compose down && docker-compose up -d
+```
+If you want, attach to the Node.js server session
+```bash
+sudo docker exec -it monitor4fv_new tmux attach -t node_mqtt
+```
