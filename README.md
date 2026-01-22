@@ -1,4 +1,7 @@
 # Monitor4FV (MQTT or API)
+
+[![SonarCloud analysis](https://github.com/Gabriele-tomai00/Monitor4SolarProduction/actions/workflows/sonarcloud.yml/badge.svg)](https://github.com/Gabriele-tomai00/Monitor4SolarProduction/actions/workflows/sonarcloud.yml)
+
 ## ⚠️ Project Status Notice ⚠️
 
 This repository is **no longer actively maintained**.  
