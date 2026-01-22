@@ -1,7 +1,7 @@
 /////////// BATTERY //////////////////////////
 
 function updateBatteryLevel(batteryPercentageValueDiv) {
-    const batteryPercentage = parseFloat(batteryPercentageValueDiv);
+    const batteryPercentage = Number.parseFloat(batteryPercentageValueDiv);
     const batteryLevel = document.querySelector('.battery-level');
     const batteryText = document.querySelector('.battery-text');
     batteryLevel.style.height = batteryPercentage + '%';
@@ -24,7 +24,7 @@ function updateBatteryLevel(batteryPercentageValueDiv) {
  /////// PRODUCTION BAR //////////////////////////
  function updateEnergyBar(pvGeneration) {
  
-    const energy = parseFloat(pvGeneration);
+    const energy = Number.parseFloat(pvGeneration);
     const energyBar = document.querySelector('.energy-bar');
     const energyFill = energyBar.querySelector('.energy-fill');
     const energyValue = energyBar.querySelector('.energy-value');
@@ -306,9 +306,9 @@ if (fvValue > 0 && gridValue > 0 && houseValue > 0 && batteryValue < 0) {
     // Extract the numerical value from the fv-value element
     //const fvValueText = fvValueElement.innerText;
     //console.log("fvValueText: " + fvValueText);
-    const fvValue = parseFloat(fvValueElement);
+    const fvValue = Number.parseFloat(fvValueElement);
     //console.log("fvValue: " + fvValue);
-    if (!isNaN(fvValue)) {
+    if (!Number.isNaN(fvValue)) {
        if (fvValue >= 3.0) {
           weatherImageElement.src = "img/sun_icon.png";
        } else if (fvValue <= 0.01) {
@@ -328,7 +328,7 @@ if (fvValue > 0 && gridValue > 0 && houseValue > 0 && batteryValue < 0) {
  }
  
  function isZeroValue(valueN) {
-    if (valueN == 0 || isNaN(valueN)) {
+    if (valueN == 0 || Number.isNaN(valueN)) {
        return true;
     } else
        return false;
@@ -370,7 +370,7 @@ if (fvValue > 0 && gridValue > 0 && houseValue > 0 && batteryValue < 0) {
              return;
           } else {
              const currentTimestamp = new Date().getTime();
-             const differenceInSeconds = (currentTimestamp - parseInt(storedTimestamp)) / 1000;
+             const differenceInSeconds = (currentTimestamp - Number.parseInt(storedTimestamp)) / 1000;
              if (differenceInSeconds >= 12) {
                 console.warn("Sono passati più di 12 secondi!");
                 displayAlert(avviso)

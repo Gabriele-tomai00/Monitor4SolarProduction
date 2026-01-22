@@ -1,9 +1,9 @@
-const http = require('http');
+const http = require('node:http');
 const express = require('express');
 const socketIo = require('socket.io');
 const axios = require('axios');
 const mqtt = require('mqtt');
-const fs = require('fs'); 
+const fs = require('node:fs'); 
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
@@ -88,7 +88,7 @@ function mqttServer() {
     const options = {
         username: process.env.MQTT_USERNAME,
         password: process.env.MQTT_PASSWORD,
-        connectTimeout: parseInt(process.env.MQTT_CONNECT_TIMEOUT, 10),
+        connectTimeout: Number.parseInt(process.env.MQTT_CONNECT_TIMEOUT, 10),
     };
     const host = process.env.MQTT_HOST;
     const client = mqtt.connect(`mqtt://${host}`, options);
@@ -120,8 +120,8 @@ function mqttServer() {
     // Management of messages received from the MQTT broker
     client.on('message', function (topic, message) {
         const jsonData = JSON.stringify(message.toString(), null, 2);
-        const validJsonString = jsonData.replace(/'/g, '"');
-        let stringWithoutQuotes = validJsonString.replace(/^["']|["']$/g, '');
+        const validJsonString = jsonData.replaceAll(/'/g, '"');
+        let stringWithoutQuotes = validJsonString.replaceAll(/^["']|["']$/g, '');
         const json = JSON.parse(stringWithoutQuotes);
         json.reciver_mode = "mqtt";
 

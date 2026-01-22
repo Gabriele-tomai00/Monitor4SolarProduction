@@ -137,7 +137,7 @@ function setRoundValue(idHtml, value) {
    } else {
       let numericValue;
       try {
-         numericValue = parseFloat(value);
+         numericValue = Number.parseFloat(value);
       } catch (e) {
          console.log("errore nel parsefloat: " + value);
          return;
@@ -158,7 +158,7 @@ function roundValue(value) {
       return "non disponible";
    let numericValue;
    try {
-      numericValue = parseFloat(value);
+      numericValue = Number.parseFloat(value);
    } catch (e) {
       console.log("errore nel parsefloat: " + value);
       return;
