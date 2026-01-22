@@ -328,11 +328,8 @@ if (fvValue > 0 && gridValue > 0 && houseValue > 0 && batteryValue < 0) {
  }
  
  function isZeroValue(valueN) {
-    if (valueN == 0 || Number.isNaN(valueN)) {
-       return true;
-    } else
-       return false;
- }
+   return valueN == 0 || Number.isNaN(valueN);
+}
  
  function hideValueAndUnitByID(id) {
     document.getElementById(id).style.display = 'none';

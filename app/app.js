@@ -120,8 +120,8 @@ function mqttServer() {
     // Management of messages received from the MQTT broker
     client.on('message', function (topic, message) {
         const jsonData = JSON.stringify(message.toString(), null, 2);
-        const validJsonString = jsonData.replaceAll(/'/g, '"');
-        let stringWithoutQuotes = validJsonString.replaceAll(/^["']|["']$/g, '');
+        const validJsonString = jsonData.replaceAll("'", '"');
+        let stringWithoutQuotes = validJsonString.replaceAll(/(?:^["'])|(?:["']$)/g, '');
         const json = JSON.parse(stringWithoutQuotes);
         json.reciver_mode = "mqtt";
 
