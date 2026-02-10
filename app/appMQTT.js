@@ -7,6 +7,7 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 const mqtt = require('mqtt');
+const xss = require('xss');
 
 require('dotenv').config();
 
@@ -25,6 +26,17 @@ client.on('connect', function () {
 client.on('message', function (topic, message) {
     try {
         const jsonData = JSON.parse(message.toString()); // Converts the message directly to JSON//+
+        
+        // Sanitize incoming data to prevent XSS
+        if (jsonData && typeof jsonData === 'object') {
+            Object.keys(jsonData).forEach((key) => {
+                const value = jsonData[key];
+                if (typeof value === 'string') {
+                    jsonData[key] = xss(value);
+                }
+            });
+        }
+
         //console.log("json ricevuto:", jsonData);
         io.emit('dati', jsonData);
     } catch (error) {
