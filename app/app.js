@@ -4,6 +4,7 @@ const socketIo = require('socket.io');
 const axios = require('axios');
 const mqtt = require('mqtt');
 const fs = require('node:fs'); 
+const xss = require('xss');
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
@@ -20,7 +21,19 @@ function getValueById(data, id) {
 app.use(express.static(__dirname));
 const PORT = process.env.port;
 
-
+function validateData(data) {
+    for (const key in data) {
+        if (Object.prototype.hasOwnProperty.call(data, key)) {
+            const value = data[key];
+            if (typeof value === 'string') {
+                const sanitized = xss(value);
+                if (sanitized !== value) {
+                    throw new Error(`Potential XSS attack detected in field: ${key}`);
+                }
+            }
+        }
+    }
+}
 
 async function apiServer() {
     io.on('connection', (socket) => {
@@ -67,6 +80,8 @@ async function apiServer() {
                     solar_grid_to_house: getValueById(response.data, "sensor.solar_grid_to_house_kw")
                 };
 
+                validateData(filteredData);
+
                 const jsonData = JSON.stringify(filteredData);
                 const json = JSON.parse(jsonData);
                 io.emit('dati', json);
@@ -74,6 +89,11 @@ async function apiServer() {
             } catch (error) {
                 console.error('Error during API request:', error.message);
                 const errJson = { error: "Home Assistant API Error Connection" };
+                
+                if (error.message.includes('XSS')) {
+                    errJson.error = error.message;
+                }
+                
                 io.emit('dati', errJson);
             }
         };
@@ -119,13 +139,24 @@ function mqttServer() {
 
     // Management of messages received from the MQTT broker
     client.on('message', function (topic, message) {
-        const jsonData = JSON.stringify(message.toString(), null, 2);
-        const validJsonString = jsonData.replaceAll("'", '"');
-        let stringWithoutQuotes = validJsonString.replaceAll(/(?:^["'])|(?:["']$)/g, '');
-        const json = JSON.parse(stringWithoutQuotes);
-        json.reciver_mode = "mqtt";
+        try {
+            const jsonData = JSON.stringify(message.toString(), null, 2);
+            const validJsonString = jsonData.replaceAll("'", '"');
+            let stringWithoutQuotes = validJsonString.replaceAll(/(?:^["'])|(?:["']$)/g, '');
+            const json = JSON.parse(stringWithoutQuotes);
+            json.reciver_mode = "mqtt";
 
-        io.emit('dati', json);
+            validateData(json);
+
+            io.emit('dati', json);
+        } catch (error) {
+            console.error('Error processing MQTT message:', error.message);
+            const errJson = { error: "Home Assistant MQTT Error Connection" };
+            if (error.message.includes('XSS')) {
+                errJson.error = error.message;
+            }
+            io.emit('dati', errJson);
+        }
     });
     
     // Error management

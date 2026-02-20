@@ -1,15 +1,27 @@
 const http = require('node:http');
 const express = require('express');
 const socketIo = require('socket.io');
-
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
-
 const mqtt = require('mqtt');
 const xss = require('xss');
 
 require('dotenv').config();
+
+function validateData(data) {
+    for (const key in data) {
+        if (Object.prototype.hasOwnProperty.call(data, key)) {
+            const value = data[key];
+            if (typeof value === 'string') {
+                const sanitized = xss(value);
+                if (sanitized !== value) {
+                    throw new Error(`Potential XSS attack detected in field: ${key}`);
+                }
+            }
+        }
+    }
+}
 
 const options = {
     username: process.env.MQTT_USERNAME,
@@ -22,28 +34,27 @@ client.on('connect', function () {
     console.log('Successful connection to the MQTT broker');
 });
 
-// Management of messages received from the MQTT broker
-client.on('message', function (topic, message) {
-    try {
-        const jsonData = JSON.parse(message.toString()); // Converts the message directly to JSON//+
-        
-        // Sanitize incoming data to prevent XSS
-        if (jsonData && typeof jsonData === 'object') {
-            Object.keys(jsonData).forEach((key) => {
-                const value = jsonData[key];
-                if (typeof value === 'string') {
-                    jsonData[key] = xss(value);
-                }
-            });
-        }
+    // Management of messages received from the MQTT broker
+    client.on('message', function (topic, message) {
+        try {
+            const jsonData = JSON.stringify(message.toString(), null, 2);
+            const validJsonString = jsonData.replaceAll("'", '"');
+            let stringWithoutQuotes = validJsonString.replaceAll(/(?:^["'])|(?:["']$)/g, '');
+            const json = JSON.parse(stringWithoutQuotes);
+            json.reciver_mode = "mqtt";
 
-        //console.log("json ricevuto:", jsonData);
-        io.emit('dati', jsonData);
-    } catch (error) {
-        console.error("Errore nel parsing del JSON:", error);
-        console.error("Messaggio ricevuto:", message.toString());
-    }
-});
+            validateData(json);
+
+            io.emit('dati', json);
+        } catch (error) {
+            console.error('Error processing MQTT message:', error.message);
+            const errJson = { error: "Home Assistant MQTT Error Connection" };
+            if (error.message.includes('XSS')) {
+                errJson.error = error.message;
+            }
+            io.emit('dati', errJson);
+        }
+    });
 
 
 // Error management
