@@ -187,7 +187,9 @@ function setRoundValue(idHtml, value) {
    // VALID VALUE TO SET
    else {
       // Usa value[0] perché value è un array [dato, validità]
-      element.textContent = value[0];
+      const num = Number.parseFloat(value[0]);
+      element.textContent = isNaN(num) ? value[0] : num.toFixed(1);
+      
       element.classList.remove("unknown-value");
       if (idHtml === "grid-value-alert") {
          const unitEl = document.getElementById("grid-alert-unit");
