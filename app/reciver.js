@@ -1,8 +1,8 @@
 const socket = io();
 
 // PAIR [value, valid]
-// value: valore ottenuto dal server
-// valid: 0 se il valore è valido, 1 se è invalido
+// value: value obtained from the server
+// valid: 0 if the value is valid, 1 if it is invalid
 let pvGeneration = [0, 0];
 let gridSensor = [0, 0];
 let homeConsumption = [0, 0];
@@ -26,7 +26,7 @@ const wallboxPlugStateDiv = document.getElementById("prism-plug-state");
 const boilerValuePowerDiv = document.getElementById("unit-boiler-power");
 hidePageUnitlData();
 // });
-// socket.on riceve i dati aggiornati secondo le regole del server (ogni 2 secondi) 
+// socket.on receives updated data according to server rules (every 2 seconds)
 socket.on('dati', (data) => {
    //console.log(data);
    //console.log("reciver_mode: ", data['reciver_mode']);
@@ -42,14 +42,14 @@ socket.on('dati', (data) => {
       carPlugState = ["sconosciuto", 0];
       wallboxChargePower = ["sconosciuto", 0];
       lastUpdatePSA = ["sconosciuto", 0];
-      // APPARE ALERT CON SCRITTO "IMMPOSSIBILE COMUNICARE CON IL SERVER"
+      // ALERT APPEARS WITH "IMPOSSIBLE TO COMMUNICATE WITH SERVER"
       showConnectionAPIAlert();
    } else {
       hideConnectionAPIAlert();
       // GET VALUE FROM DATA RESPONSE //
-      // check function: controlla se il valore è valido.
-      // Se è undefined, null, o una stringa "unavailable"/"unknown"/"nan" (case insensitive),
-      // restituisce una coppia [valore, 1] (invalido). Altrimenti restituisce [valore, 0] (valido).
+      // check function: checks if the value is valid.
+      // If it is undefined, null, or a string "unavailable"/"unknown"/"nan" (case insensitive),
+      // returns a pair [value, 1] (invalid). Otherwise returns [value, 0] (valid).
       const check = (val) => (val === undefined || val === null || /^(unavailable|unknown|nan|sconosciuto)$/i.test(val)) ? [val, 1] : [val, 0];
 
       pvGeneration = check(data['solaredge_potenza_totale_dc']);
@@ -76,9 +76,9 @@ socket.on('dati', (data) => {
       setBatteryValueSize("battery-percentage-value", batteryPVpercentage);
       
       if (wallboxPlugState[0] === "Scollegata") {
-         wallboxPlugStateDiv.style.color = "red"; // Testo in rosso
+         wallboxPlugStateDiv.style.color = "red"; // Red text
       } else {
-         wallboxPlugStateDiv.style.color = "green"; // Testo in verde
+         wallboxPlugStateDiv.style.color = "green"; // Green text
       }
 
       //boiler
@@ -138,11 +138,6 @@ socket.on('dati', (data) => {
 });
 
 function ChangeCarIcon(prismState, prismPower) {
-   // console.log("prismState: " + prismState);
-   // console.log("prismPower: " + prismPower);
-   const carImage = document.getElementById('eletric-car-img');
-   const carValuePowerDiv = document.getElementById("unit-car-power");
-
    const carBlock = document.getElementById('car-div');
    if (prismPower[1] === 0 && prismPower[0] > 0.2) {
       carBlock.style.visibility = 'visible';
@@ -186,10 +181,10 @@ function setRoundValue(idHtml, value) {
    } 
    // VALID VALUE TO SET
    else {
-      // Usa value[0] perché value è un array [dato, validità]
+      // Use value[0] because value is an array [data, validity]
       const num = Number.parseFloat(value[0]);
       element.textContent = isNaN(num) ? value[0] : num.toFixed(1);
-      
+
       element.classList.remove("unknown-value");
       if (idHtml === "grid-value-alert") {
          const unitEl = document.getElementById("grid-alert-unit");
@@ -214,7 +209,7 @@ function roundValue(value) {
    try {
       numericValue = Number.parseFloat(value);
    } catch (e) {
-      console.log("errore nel parsefloat: " + value);
+      console.log("error in parsefloat: " + value);
       return;
    }
    return Math.round(numericValue * 10) / 10;
@@ -245,11 +240,11 @@ function setBatteryValueSize(idHtml, value) {
 }
 
 function hasError(json) {
-   // Verifica se l'oggetto JSON contiene la chiave "error" e se il suo valore non è vuoto
+   // Checks if the JSON object contains the key "error" and if its value is not empty
    if (json.hasOwnProperty('error') && json.error !== null && json.error !== undefined && json.error !== '') {
-      return true; // Restituisce true se la chiave "error" non è vuota
+      return true; // Returns true if the "error" key is not empty
    } else {
-      return false; // Restituisce false altrimenti
+      return false; // Returns false otherwise
    }
 }
 
@@ -280,7 +275,7 @@ function showConnectionAPIAlert() {
    }
 }
 
-// Funzione per ripristinare la pagina web e nascondere l'alert
+// Function to restore the web page and hide the alert
 function hideConnectionAPIAlert() {
    var avviso = document.getElementById("internetConnectionAlert");
    avviso.style.display = "none";
@@ -290,9 +285,9 @@ function hideConnectionAPIAlert() {
 }
 
 function ifNotUnavailable(str) {
-   // Regex per cercare "unavailable" indipendentemente dal formato
+   // Regex to search for "unavailable" regardless of format
    const regex = /\bunavailable\b/i;
-   // Testa la stringa con la regex
+   // Test the string with the regex
    if(regex.test(str))
       return "sconosciuto";
    else

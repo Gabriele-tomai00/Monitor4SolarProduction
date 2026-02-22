@@ -21,7 +21,7 @@ const PORT = 3100;
 
 
 io.on('connection', (socket) => {
-    console.log('Un client si è connesso');
+    console.log('A client connected');
     // the payload downloaded every 2 seconds is about 0.24 MB
 
     // Function to make an API request and send data to clients
@@ -31,7 +31,7 @@ io.on('connection', (socket) => {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
-                timeout: 4000 // Timeout di 3 secondi in millisecondi
+                timeout: 4000 // Timeout of 4 seconds in milliseconds
             });
             const filteredData = {
                 solaredge_potenza_totale_dc: getValueById(response.data, "sensor.solaredge_potenza_totale_dc"),
@@ -59,8 +59,7 @@ io.on('connection', (socket) => {
             io.emit('dati', json);
 
         } catch (error) {
-            console.error('Errore durante la richiesta API:', error.message);
-            //console.log("invio json vuoto");
+            console.error('Error during API request:', error.message);
             const errJson = {
                 error: "Home Assistant API Error Connection",
             };

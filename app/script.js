@@ -6,13 +6,13 @@ function updateBatteryLevel(batteryPercentageValueDiv) {
    const batteryContainer = document.getElementById('battery-graphic-container');
 
     
-   // Se il dato non è valido (batteryPercentageValueDiv[1] == 1)
+   // If the data is invalid (batteryPercentageValueDiv[1] == 1)
    if (batteryPercentageValueDiv[1] === 1) {
       if (batteryContainer) batteryContainer.style.display = 'none';
       return;
    }
    
-   // Se il dato è valido, assicurati che il container sia visibile
+   // If the data is valid, ensure the container is visible
    if (batteryContainer) batteryContainer.style.display = 'block';
 
     const batteryPercentage = Number.parseFloat(batteryPercentageValueDiv[0]);
@@ -36,17 +36,17 @@ function updateBatteryLevel(batteryPercentageValueDiv) {
     const energyFill = energyBar.querySelector('.energy-fill');
     const energyValue = energyBar.querySelector('.energy-value');
 
-    // Se il dato non è valido (pvGeneration[1] == 1)
+    // If the data is invalid (pvGeneration[1] == 1)
     if (pvGeneration[1] === 1) {
        energyValue.innerText = "sconosciuto";
-       // Stile come se fosse 0
+       // Style as if it were 0
        energyBar.setAttribute('data-energy', 0);
        energyFill.style.width = `0%`;
        energyFill.style.backgroundColor = calculateColor(0);
        return;
     }
     
-    // Dato valido
+    // Valid data
     const energy = Number.parseFloat(pvGeneration[0]);
     energyBar.setAttribute('data-energy', energy);
     energyFill.style.width = `${(energy / 7.0) * 100}%`;
@@ -56,10 +56,10 @@ function updateBatteryLevel(batteryPercentageValueDiv) {
 
  
  function calculateColor(energy) {
-    const minColorDarkGray = [31, 41, 55]; // Grigio scuro
-    const minColorDarkGreen = [80, 167, 83]; // Verde chiaro
-    const minColorLightGreen = [144, 238, 144]; // Verde molto chiaro
-    const minColorYellow = [255, 255, 0]; // Giallo
+    const minColorDarkGray = [31, 41, 55]; // Dark gray
+    const minColorDarkGreen = [80, 167, 83]; // Light green
+    const minColorLightGreen = [144, 238, 144]; // Very light green
+    const minColorYellow = [255, 255, 0]; // Yellow
  
     let color;
     if (energy < 1) {
@@ -273,43 +273,43 @@ if (fvValue > 0 && gridValue > 0 && houseValue > 0 && batteryValue < 0) {
     arrowBatteryToGrid.style.display = 'none';
     arrowGridtoBattery.style.display = 'block';
 //
-// --- CASI IMPOSSIBILI ---
+// --- IMPOSSIBLE CASES ---
 //
 
 } else if (fvValue > 0 && gridValue > 0 && houseValue > 0 && batteryValue === 0) {
-    console.log("2 Impossibile");
+    console.log("2 Impossible");
 } else if (fvValue > 0 && gridValue > 0 && houseValue === 0 && batteryValue === 0) {
-    console.log("3 Impossibile");
+    console.log("3 Impossible");
 } else if (fvValue > 0 && gridValue > 0 && houseValue === 0 && batteryValue < 0) {
-    console.log("4 Impossibile");
+    console.log("4 Impossible");
 } else if (fvValue > 0 && gridValue === 0 && houseValue === 0 && batteryValue > 0) {
-    console.log("5 Impossibile");
+    console.log("5 Impossible");
 } else if (fvValue > 0 && gridValue === 0 && houseValue === 0 && batteryValue === 0) {
-    console.log("6 Impossibile");
+    console.log("6 Impossible");
 } else if (fvValue > 0 && gridValue === 0 && houseValue === 0 && batteryValue < 0) {
-    console.log("7 Impossibile");
+    console.log("7 Impossible");
 } else if (fvValue === 0 && gridValue > 0 && houseValue === 0 && batteryValue === 0) {
-    console.log("8 Impossibile");
+    console.log("8 Impossible");
 } else if (fvValue === 0 && gridValue > 0 && houseValue === 0 && batteryValue < 0) {
-    console.log("9 Impossibile");
+    console.log("9 Impossible");
 } else if (fvValue === 0 && gridValue === 0 && houseValue > 0 && batteryValue > 0) {
-    console.log("10 Impossibile");
+    console.log("10 Impossible");
 } else if (fvValue === 0 && gridValue === 0 && houseValue > 0 && batteryValue === 0) {
-    console.log("11 Impossibile");
+    console.log("11 Impossible");
 } else if (fvValue === 0 && gridValue === 0 && houseValue === 0 && batteryValue > 0) {
-    console.log("12 Impossibile");
+    console.log("12 Impossible");
 } else if (fvValue === 0 && gridValue === 0 && houseValue === 0 && batteryValue === 0) {
-    console.log("13 Impossibile");
+    console.log("13 Impossible");
 } else if (fvValue === 0 && gridValue === 0 && houseValue === 0 && batteryValue < 0) {
-    console.log("14 Impossibile");
+    console.log("14 Impossible");
 } else if (fvValue === 0 && gridValue < 0 && houseValue > 0 && batteryValue === 0) {
-    console.log("15 Impossibile");
+    console.log("15 Impossible");
 } else if (fvValue === 0 && gridValue < 0 && houseValue === 0 && batteryValue > 0) {
-    console.log("16 Impossibile");
+    console.log("16 Impossible");
 } else if (fvValue === 0 && gridValue < 0 && houseValue === 0 && batteryValue === 0) {
-    console.log("17 Impossibile");
+    console.log("17 Impossible");
 }else {
-    console.log("Combinazione non gestita");
+    console.log("Unhandled combination");
 }
 
 
@@ -483,9 +483,9 @@ if (fvValue > 0 && gridValue > 0 && houseValue > 0 && batteryValue < 0) {
     avviso.style.display = "block";
  }
  
- // Funzione per ripristinare la pagina web e nascondere l'alert
- function hideErrorNodeJSAlert() {
-   //  var avviso = document.getElementById("NodeJSAbsentConnectionAlert");
+ // Function to restore the web page and hide the alert
+function hideErrorNodeJSAlert() {
+  //  var avviso = document.getElementById("NodeJSAbsentConnectionAlert");
    //  avviso.style.display = "none";
  
    //  var avviso = document.getElementById("bodyPageWithoutAlert");

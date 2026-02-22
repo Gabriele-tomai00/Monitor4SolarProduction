@@ -229,7 +229,7 @@ td {
 	background-color: #ccc;
 	font-size: 7em;
 	margin: 0 auto;
-	/* Centra orizzontalmente */
+	/* Center horizontally */
 }
 
 .energy-fill {
@@ -238,7 +238,7 @@ td {
 	left: 0;
 	height: 100%;
 	background-color: #007bff;
-	/* Colore di base (es. blu) */
+	/* Base color (e.g. blue) */
 	transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
 }
 
@@ -278,26 +278,26 @@ td {
 }
 #red-dot-alert {
     position: absolute;
-    top: 50%; /* Centra verticalmente */
-    right: 40px; /* Posiziona il pallino vicino al bordo destro */
+    top: 50%; /* Center vertically */
+    right: 40px; /* Position the dot near the right edge */
     transform: translateY(-50%);
-    width: 30px; /* Larghezza del pallino */
-    height: 30px; /* Altezza del pallino */
-    background-color: red; /* Colore rosso */
-    border-radius: 50%; /* Rende il pallino circolare */
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Ombra per un effetto 3D */
-    text-align: center; /* Centra il testo rispetto al pallino */
+    width: 30px; /* Dot width */
+    height: 30px; /* Dot height */
+    background-color: red; /* Red color */
+    border-radius: 50%; /* Makes the dot circular */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Shadow for 3D effect */
+    text-align: center; /* Center text relative to the dot */
 }
 
 #red-text-alert {
     position: absolute;
-    top: 105%; /* Sposta la scritta appena sotto il pallino */
-    left: 50%; /* Centra la scritta rispetto al pallino */
-    transform: translateX(-50%); /* Allinea il testo al centro del pallino */
-    font-size: 18px; /* Dimensione piccola */
-    color: red; /* Colore rosso */
-    font-weight: bold; /* Grassetto */
-    white-space: nowrap; /* Impedisce che il testo vada a capo */
+    top: 105%; /* Move text just below the dot */
+    left: 50%; /* Center text relative to the dot */
+    transform: translateX(-50%); /* Align text to the center of the dot */
+    font-size: 18px; /* Small size */
+    color: red; /* Red color */
+    font-weight: bold; /* Bold */
+    white-space: nowrap; /* Prevents text from wrapping */
 }
 /* ******************** BATTERY *************************** */
 #battery-graphic-container {

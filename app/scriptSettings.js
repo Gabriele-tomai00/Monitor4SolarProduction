@@ -8,7 +8,7 @@ document.getElementById('save-mode').addEventListener('click', function() {
         if (selectedMode.value === "api") {
             console.log('API mode selected');
             socket.emit('changeMode', 'api');
-                // Inserisci qui il codice per gestire la modalità API
+                // Insert code here to handle API mode
         } else if (selectedMode.value === "mqtt") {
             console.log('MQTT mode selected');
             socket.emit('changeMode', 'mqtt');
@@ -28,7 +28,7 @@ socket.on('disconnect', () => {
 });
 
 socket.on('dati', (data) => {
-    console.log('recived mode from: ', data["reciver_mode"]);
+    console.log('received mode from: ', data["reciver_mode"]);
 
     const mqttMode = document.getElementById('mqtt-mode');
     const apiMode = document.getElementById('api-mode');
