@@ -1,17 +1,20 @@
 const socket = io();
 
-let pvGeneration;
-let gridSensor;
-let homeConsumption;
-let batteryPVchargeDischarge;
-let batteryPVpercentage;
-let boilerPower;
+// PAIR [value, valid]
+// value: valore ottenuto dal server
+// valid: 0 se il valore è valido, 1 se è invalido
+let pvGeneration = [0, 0];
+let gridSensor = [0, 0];
+let homeConsumption = [0, 0];
+let batteryPVchargeDischarge = [0, 0];
+let batteryPVpercentage = [0, 0];
+let boilerPower = [0, 0];
 // car
-let carBatteryPercentge;
-let carPlugState;
-let wallboxChargePower;
-let wallboxPlugState;
-let lastUpdatePSA;
+let carBatteryPercentge = [0, 0];
+let carPlugState = [0, 0];
+let wallboxChargePower = [0, 0];
+let wallboxPlugState = [0, 0];
+let lastUpdatePSA = [0, 0];
 
 // GET HTML DIV //
 const houseValuePowerDiv = document.getElementById("unit-house-power");
@@ -28,51 +31,108 @@ socket.on('dati', (data) => {
    //console.log(data);
    //console.log("reciver_mode: ", data['reciver_mode']);
    if (hasError(data)) {
-      pvGeneration = "sconosciuto"; //getValueById(data, "sensor.solaredge_potenza_totale_dc"); console.log("pvGeneration: " + pvGeneration);
-      gridSensor = "sconosciuto";
-      homeConsumption = "sconosciuto";
-      batteryPVchargeDischarge = "sconosciuto";
-      batteryPVpercentage = "sconosciuto";
-      boilerPower = "sconosciuto";
+      pvGeneration = ["sconosciuto", 0]; //getValueById(data, "sensor.solaredge_potenza_totale_dc"); console.log("pvGeneration: " + pvGeneration);
+      gridSensor = ["sconosciuto", 0];
+      homeConsumption = ["sconosciuto", 0];
+      batteryPVchargeDischarge = ["sconosciuto", 0];
+      batteryPVpercentage = ["sconosciuto", 0];
+      boilerPower = ["sconosciuto", 0];
       // car
-      carBatteryPercentge = "sconosciuto";
-      carPlugState = "sconosciuto";
-      wallboxChargePower = "sconosciuto";
-      lastUpdatePSA = "sconosciuto";
+      carBatteryPercentge = ["sconosciuto", 0];
+      carPlugState = ["sconosciuto", 0];
+      wallboxChargePower = ["sconosciuto", 0];
+      lastUpdatePSA = ["sconosciuto", 0];
       // APPARE ALERT CON SCRITTO "IMMPOSSIBILE COMUNICARE CON IL SERVER"
       showConnectionAPIAlert();
-
    } else {
       hideConnectionAPIAlert();
       // GET VALUE FROM DATA RESPONSE //
-      pvGeneration = data['solaredge_potenza_totale_dc'];
-      gridSensor = data['prism_sensore_rete'];
-      homeConsumption = data['consumo_casa'];
-      batteryPVchargeDischarge = data['lg_carica_scarica_istantanea_kw'];
-      batteryPVpercentage = data['lg_percentuale_di_carica'];
-      boilerPower = data['shelly_consumo_boiler'];
+      // check function: controlla se il valore è valido.
+      // Se è undefined, null, o una stringa "unavailable"/"unknown"/"nan" (case insensitive),
+      // restituisce una coppia [valore, 1] (invalido). Altrimenti restituisce [valore, 0] (valido).
+      const check = (val) => (val === undefined || val === null || /^(unavailable|unknown|nan|sconosciuto)$/i.test(val)) ? [val, 1] : [val, 0];
+
+      pvGeneration = check(data['solaredge_potenza_totale_dc']);
+      gridSensor = check(data['prism_sensore_rete']);
+      homeConsumption = check(data['consumo_casa']);
+      batteryPVchargeDischarge = check(data['lg_carica_scarica_istantanea_kw']);
+      batteryPVpercentage = check(data['lg_percentuale_di_carica']);
+      boilerPower = check(data['shelly_consumo_boiler']);
       // car
-      carBatteryPercentge = data['car_corsa_energy_level'];
-      carPlugState = data['prism_plug_state'];
-      wallboxChargePower = data['prism_potenza_di_carica'];
-      wallboxPlugState = data['prism_plug_state'];
-      lastUpdatePSA = data['car_corsa_last_update'];
+      carBatteryPercentge = check(data['car_corsa_energy_level']);
+      carPlugState = check(data['prism_plug_state']);
+      wallboxChargePower = check(data['prism_potenza_di_carica']);
+      wallboxPlugState = check(data['prism_plug_state']);
+      lastUpdatePSA = check(data['car_corsa_last_update']);
 
       showPageAfterData();
+
       // SET VALUE IN HTML //
-      setRoundValue("fv-value", roundValue(pvGeneration));
-      setRoundValue("grid-value", roundValue(gridSensor));
-      setRoundValue("grid-value-alert", roundValue(gridSensor));
-      setRoundValue("house-value", roundValue(homeConsumption));
-      setRoundValue("battery-power-value", roundValue(batteryPVchargeDischarge));
+      setRoundValue("fv-value", pvGeneration);
+      setRoundValue("grid-value", gridSensor);
+      setRoundValue("grid-value-alert", gridSensor);
+      setRoundValue("house-value", homeConsumption);
+      setRoundValue("battery-power-value", batteryPVchargeDischarge);
       setBatteryValueSize("battery-percentage-value", batteryPVpercentage);
       
-      if (wallboxPlugState === "Scollegata") {
+      if (wallboxPlugState[0] === "Scollegata") {
          wallboxPlugStateDiv.style.color = "red"; // Testo in rosso
       } else {
          wallboxPlugStateDiv.style.color = "green"; // Testo in verde
       }
 
+      //boiler
+      if (boilerPower[1] === 0) {
+         boilerValuePowerDiv.textContent = boilerPower[0] + " kw";
+      } else {
+         boilerValuePowerDiv.textContent = "sconosciuto";
+      }
+
+      // MODAL UPDATES
+      if (homeConsumption[1] === 0) {
+          houseValuePowerDiv.textContent = homeConsumption[0] + " kw";
+      } else {
+          houseValuePowerDiv.textContent = "sconosciuto";
+      }
+
+      if (wallboxPlugState[1] === 0) {
+          wallboxPlugStateDiv.textContent = wallboxPlugState[0];
+      } else {
+          wallboxPlugStateDiv.textContent = "sconosciuto";
+      }
+
+      if (carBatteryPercentge[1] === 0) {
+          carValuePercentageDivInModal.textContent = Math.floor(Number.parseFloat(carBatteryPercentge[0])) + "%";
+      } else {
+          carValuePercentageDivInModal.textContent = "sconosciuto";
+      }
+      
+      if (lastUpdatePSA[1] === 0) {
+         carValueLastUpdate.textContent = lastUpdatePSA[0];
+      } else {
+         carValueLastUpdate.textContent = "sconosciuto";
+      }
+
+      // CAR UPDATES (MAIN PAGE)
+      if (wallboxChargePower[1] === 0) {
+         carValuePowerDiv.textContent = wallboxChargePower[0] + " kw";
+      } else {
+         carValuePowerDiv.textContent = "";
+      }
+
+      if (carBatteryPercentge[1] === 0) {
+         carValuePercentageDiv.textContent = Math.floor(Number.parseFloat(carBatteryPercentge[0])) + "%";
+      } else {
+         carValuePercentageDiv.textContent = "";
+      }
+
+      updateEnergyBar(pvGeneration);
+      ChangeCarIcon(carPlugState, wallboxChargePower);
+      boilerIcon(boilerPower);
+      updateArrowVisibility(pvGeneration, gridSensor, homeConsumption, batteryPVchargeDischarge);
+      updateBatteryLevel(batteryPVpercentage);
+      updateWeatherImage(pvGeneration);
+      checkForEnergyAlert(gridSensor, wallboxChargePower);
    }
 
 });
@@ -84,16 +144,18 @@ function ChangeCarIcon(prismState, prismPower) {
    const carValuePowerDiv = document.getElementById("unit-car-power");
 
    const carBlock = document.getElementById('car-div');
-   if (prismPower > 0.2) {
+   if (prismPower[1] === 0 && prismPower[0] > 0.2) {
       carBlock.style.visibility = 'visible';
    } else {
       carBlock.style.visibility = 'hidden';
    }
 }
 
+
+
 function boilerIcon(boilerPower) {
    const boilerImage = document.getElementById('boiler-img');
-   if (boilerPower > 0.2) {
+   if (boilerPower[1] === 0 && boilerPower[0] > 0.2) {
       boilerImage.style.visibility = 'visible';
    } else {
       boilerImage.style.visibility = 'hidden';
@@ -102,8 +164,8 @@ function boilerIcon(boilerPower) {
 
 function setRoundValue(idHtml, value) {
    const element = document.getElementById(idHtml);
-   // NOT VALID VALUES TO SET: small text "sconosciuto" and not show unit
-   if (value === "sconosciuto" || value === "non disponibile" || value >= 999) {
+   // NOT VALID VALUES TO SET: "sconosciuto"
+   if (value[1] === 1) {
       element.textContent = "sconosciuto";
       element.classList.add("unknown-value");
 
@@ -124,7 +186,8 @@ function setRoundValue(idHtml, value) {
    } 
    // VALID VALUE TO SET
    else {
-      element.textContent = value; // Set only the value, unit is in a separate span
+      // Usa value[0] perché value è un array [dato, validità]
+      element.textContent = value[0];
       element.classList.remove("unknown-value");
       if (idHtml === "grid-value-alert") {
          const unitEl = document.getElementById("grid-alert-unit");

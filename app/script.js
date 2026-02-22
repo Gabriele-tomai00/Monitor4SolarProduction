@@ -1,9 +1,21 @@
 /////////// BATTERY //////////////////////////
 
 function updateBatteryLevel(batteryPercentageValueDiv) {
-    const batteryPercentage = Number.parseFloat(batteryPercentageValueDiv);
-    const batteryLevel = document.querySelector('.battery-level');
-    const batteryText = document.querySelector('.battery-text');
+   const batteryLevel = document.querySelector('.battery-level');
+   const batteryText = document.querySelector('.battery-text');
+   const batteryContainer = document.getElementById('battery-graphic-container');
+
+    
+   // Se il dato non è valido (batteryPercentageValueDiv[1] == 1)
+   if (batteryPercentageValueDiv[1] === 1) {
+      if (batteryContainer) batteryContainer.style.display = 'none';
+      return;
+   }
+   
+   // Se il dato è valido, assicurati che il container sia visibile
+   if (batteryContainer) batteryContainer.style.display = 'block';
+
+    const batteryPercentage = Number.parseFloat(batteryPercentageValueDiv[0]);
     batteryLevel.style.height = batteryPercentage + '%';
     batteryText.textContent = batteryPercentage;
     if (batteryPercentage < 20) {
@@ -14,27 +26,34 @@ function updateBatteryLevel(batteryPercentageValueDiv) {
        batteryLevel.style.backgroundColor = '#7CCC9A';
     }
  
-    // if (batteryPercentage == 0) {
-    //     const percentageValue = document.getElementById('battery-level-percentage-value');
-    //     percentageValue.style.display = 'none';
-    // }
  }
  
  
  /////// PRODUCTION BAR //////////////////////////
  function updateEnergyBar(pvGeneration) {
- 
-    const energy = Number.parseFloat(pvGeneration);
+
     const energyBar = document.querySelector('.energy-bar');
     const energyFill = energyBar.querySelector('.energy-fill');
     const energyValue = energyBar.querySelector('.energy-value');
- 
+
+    // Se il dato non è valido (pvGeneration[1] == 1)
+    if (pvGeneration[1] === 1) {
+       energyValue.innerText = "sconosciuto";
+       // Stile come se fosse 0
+       energyBar.setAttribute('data-energy', 0);
+       energyFill.style.width = `0%`;
+       energyFill.style.backgroundColor = calculateColor(0);
+       return;
+    }
+    
+    // Dato valido
+    const energy = Number.parseFloat(pvGeneration[0]);
     energyBar.setAttribute('data-energy', energy);
     energyFill.style.width = `${(energy / 7.0) * 100}%`;
- 
     energyFill.style.backgroundColor = energy >= 1 ? calculateColor(energy) : '#1f2937';
     energyValue.innerText = `${energy} kw`;
  }
+
  
  function calculateColor(energy) {
     const minColorDarkGray = [31, 41, 55]; // Grigio scuro
@@ -58,7 +77,18 @@ function updateBatteryLevel(batteryPercentageValueDiv) {
  
  
  ////////////////////////// ARROWS //////////////////////////
- function updateArrowVisibility(fvValue, gridValue, houseValue, batteryValue) {
+ function updateArrowVisibility(fvValue_pair, gridValue_pair, houseValue_pair, batteryValue_pair) {
+
+   // in case of unavailable data, set the value to 0: $_pair[1] == 1
+   let fvValue = 0;
+   let gridValue = 0;
+   let houseValue = 0;
+   let batteryValue = 0;
+
+   if (fvValue_pair[1] === 0) { fvValue = Number.parseFloat(fvValue_pair[0]); } 
+   if (gridValue_pair[1] === 0) { gridValue = Number.parseFloat(gridValue_pair[0]); } 
+   if (houseValue_pair[1] === 0) { houseValue = Number.parseFloat(houseValue_pair[0]); } 
+   if (batteryValue_pair[1] === 0) { batteryValue = Number.parseFloat(batteryValue_pair[0]); }
 
     const arrowFVtoHouse = document.getElementById('arrowFVtoHouse');
     const arrowFVtoBattery = document.getElementById('arrowFVtoBattery');
@@ -67,6 +97,8 @@ function updateBatteryLevel(batteryPercentageValueDiv) {
     const arrowFVtoGrid = document.getElementById('arrowFVtoGrid');
     const arrowBatteryToGrid = document.getElementById('arrowBatteryToGrid');
     const arrowGridtoBattery = document.getElementById('arrowGridtoBattery');
+
+
    
 if (fvValue > 0 && gridValue > 0 && houseValue > 0 && batteryValue < 0) {
     arrowFVtoHouse.style.display = 'block';
@@ -164,6 +196,9 @@ if (fvValue > 0 && gridValue > 0 && houseValue > 0 && batteryValue < 0) {
     arrowFVtoGrid.style.display = 'none';
     arrowBatteryToGrid.style.display = 'none';
     arrowGridtoBattery.style.display = 'block';
+
+
+
 } else if (fvValue === 0 && gridValue > 0 && houseValue > 0 && batteryValue === 0) {
     arrowFVtoHouse.style.display = 'none';
     arrowFVtoBattery.style.display = 'none';
@@ -172,6 +207,9 @@ if (fvValue > 0 && gridValue > 0 && houseValue > 0 && batteryValue < 0) {
     arrowFVtoGrid.style.display = 'none';
     arrowBatteryToGrid.style.display = 'none';
     arrowGridtoBattery.style.display = 'none';
+
+
+
 } else if (fvValue === 0 && gridValue > 0 && houseValue > 0 && batteryValue < 0) {
     arrowFVtoHouse.style.display = 'none';
     arrowFVtoBattery.style.display = 'none';
@@ -301,13 +339,14 @@ if (fvValue > 0 && gridValue > 0 && houseValue > 0 && batteryValue < 0) {
  
  // Function to update the weather image based on fv-value
  function updateWeatherImage(fvValueElement) {
-    //console.log("fvValueElement: " + fvValueElement);
     const weatherImageElement = document.getElementById("weather-FVindicator-id");
-    // Extract the numerical value from the fv-value element
-    //const fvValueText = fvValueElement.innerText;
-    //console.log("fvValueText: " + fvValueText);
-    const fvValue = Number.parseFloat(fvValueElement);
-    //console.log("fvValue: " + fvValue);
+   if (fvValueElement[1] === 1) {
+      weatherImageElement.style.display = 'none';
+      return;
+   }
+    
+    weatherImageElement.style.display = 'block';
+    const fvValue = Number.parseFloat(fvValueElement[0]);
     if (!Number.isNaN(fvValue)) {
        if (fvValue >= 3.0) {
           weatherImageElement.src = "img/sun_icon.png";
@@ -348,13 +387,16 @@ if (fvValue > 0 && gridValue > 0 && houseValue > 0 && batteryValue < 0) {
  
  
  function checkForEnergyAlert(gridValue, prismPower) {
+   if (gridValue[1] === 1 || prismPower[1] === 1) {
+      return;
+   }
     var avviso = document.getElementById("gridLimitAlert");
  
     const audio = new Audio('sounds/alert-sound.mp3');
-    if (prismPower > 0) {
+    if (prismPower[0] > 0) {
        stopAlert(avviso, audio);
     } else {
-       if (gridValue <= 4.51 || gridValue >= 15) {
+       if (gridValue[0] <= 4.51 || gridValue[0] >= 15) {
           sessionStorage.removeItem('timestampForAlert');
           stopAlert(avviso, audio);
        } else {
@@ -457,7 +499,7 @@ if (fvValue > 0 && gridValue > 0 && houseValue > 0 && batteryValue < 0) {
     //////// boiler-modal /////////////
     var boilerModal = document.getElementById("boiler-modal");
     var boilerImg = document.getElementById("boiler-img");
-    var closeModalSpanBoiler = document.getElementsByClassName("close")[0];
+    var closeModalSpanBoiler = document.getElementsByClassName("close")[1];
  
     boilerImg.onclick = function () {
        boilerModal.style.display = "block";
@@ -467,7 +509,7 @@ if (fvValue > 0 && gridValue > 0 && houseValue > 0 && batteryValue < 0) {
     //////// house-modal /////////////
     var houseModal = document.getElementById("house-modal");
     var houseImg = document.getElementById("house-img");
-    var closeModalSpanHouse = document.getElementsByClassName("close")[1];
+    var closeModalSpanHouse = document.getElementsByClassName("close")[0];
  
     houseImg.onclick = function () {
        houseModal.style.display = "block";
