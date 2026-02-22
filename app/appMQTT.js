@@ -18,6 +18,8 @@ function validateData(data) {
                 if (sanitized !== value) {
                     console.error(`Error processing MQTT message: Potential XSS attack detected in field: ${key}`);
                     data[key] = "sconosciuto";
+                } else if (value.toLowerCase() === 'unavailable' || value.toLowerCase() === 'unknown' || value.toLowerCase() === 'NaN') {
+                    data[key] = "sconosciuto";
                 }
             }
         }

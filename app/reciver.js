@@ -28,17 +28,17 @@ socket.on('dati', (data) => {
    //console.log(data);
    //console.log("reciver_mode: ", data['reciver_mode']);
    if (hasError(data)) {
-      pvGeneration = "..."; //getValueById(data, "sensor.solaredge_potenza_totale_dc"); console.log("pvGeneration: " + pvGeneration);
-      gridSensor = "...";
-      homeConsumption = "...";
-      batteryPVchargeDischarge = "...";
-      batteryPVpercentage = "...";
-      boilerPower = "...";
+      pvGeneration = "sconosciuto"; //getValueById(data, "sensor.solaredge_potenza_totale_dc"); console.log("pvGeneration: " + pvGeneration);
+      gridSensor = "sconosciuto";
+      homeConsumption = "sconosciuto";
+      batteryPVchargeDischarge = "sconosciuto";
+      batteryPVpercentage = "sconosciuto";
+      boilerPower = "sconosciuto";
       // car
-      carBatteryPercentge = "...";
-      carPlugState = "...";
-      wallboxChargePower = "...";
-      lastUpdatePSA = "...";
+      carBatteryPercentge = "sconosciuto";
+      carPlugState = "sconosciuto";
+      wallboxChargePower = "sconosciuto";
+      lastUpdatePSA = "sconosciuto";
       // APPARE ALERT CON SCRITTO "IMMPOSSIBILE COMUNICARE CON IL SERVER"
       showConnectionAPIAlert();
 
@@ -57,7 +57,6 @@ socket.on('dati', (data) => {
       wallboxChargePower = data['prism_potenza_di_carica'];
       wallboxPlugState = data['prism_plug_state'];
       lastUpdatePSA = data['car_corsa_last_update'];
-      //console.log("wallboxChargePower: " + wallboxChargePower);
 
       showPageAfterData();
       // SET VALUE IN HTML //
@@ -67,37 +66,13 @@ socket.on('dati', (data) => {
       setRoundValue("house-value", roundValue(homeConsumption));
       setRoundValue("battery-power-value", roundValue(batteryPVchargeDischarge));
       setBatteryValueSize("battery-percentage-value", batteryPVpercentage);
-
-      //house
-      houseValuePowerDiv.textContent = roundValue(homeConsumption) + " kw";
-      //car
-      carValuePercentageDiv.textContent = ifNotUnavailable(carBatteryPercentge + "%");
-      carValuePercentageDivInModal.textContent = ifNotUnavailable(carBatteryPercentge + "%");
-      carValuePercentageDivInModal.textContent = ifNotUnavailable(carBatteryPercentge + "%");
-      carValueLastUpdate.textContent = ifNotUnavailable(lastUpdatePSA);
-      carValuePowerDiv.textContent = ifNotUnavailable(wallboxChargePower + " kw");
-      wallboxPlugStateDiv.textContent = ifNotUnavailable(wallboxPlugState);
+      
       if (wallboxPlugState === "Scollegata") {
          wallboxPlugStateDiv.style.color = "red"; // Testo in rosso
       } else {
          wallboxPlugStateDiv.style.color = "green"; // Testo in verde
       }
 
-      //boiler
-      boilerValuePowerDiv.textContent = boilerPower + " kw";
-
-
-      updateEnergyBar(roundValue(pvGeneration));
-      ChangeCarIcon(carPlugState, wallboxChargePower);
-      boilerIcon(boilerPower);
-      updateArrowVisibility(roundValue(pvGeneration), roundValue(gridSensor), roundValue(homeConsumption), roundValue(batteryPVchargeDischarge));
-      updateBatteryLevel(batteryPVpercentage);
-      updateWeatherImage(roundValue(pvGeneration));
-      checkForEnergyAlert(roundValue(gridSensor), wallboxChargePower.value);
-      // console.log("solar_panel_to_grid: ", solar_panel_to_grid);
-      // console.log(solar_panel_to_house);
-      // console.log(solar_panel_to_battery);
-      // console.log("solar_grid_to_house: ", solar_grid_to_house);
    }
 
 });
@@ -127,35 +102,49 @@ function boilerIcon(boilerPower) {
 
 function setRoundValue(idHtml, value) {
    const element = document.getElementById(idHtml);
-   if (value == "NaN" || value == "Undefined" || value == "undefined" || value == "Unavailable" || value == "unavailable" || value == 999) {
-      element.textContent = "...";
-      console.log("elemento destinato a " + idHtml + " non trovato");
-      return;
-   } else if (value == "...") {
-      element.textContent = "...";
-      return;
-   } else {
-      let numericValue;
-      try {
-         numericValue = Number.parseFloat(value);
-      } catch (e) {
-         console.log("errore nel parsefloat: " + value);
-         return;
+   // NOT VALID VALUES TO SET: small text "sconosciuto" and not show unit
+   if (value === "sconosciuto" || value === "non disponibile" || value >= 999) {
+      element.textContent = "sconosciuto";
+      element.classList.add("unknown-value");
+
+      if (idHtml === "grid-value-alert") {
+         const unitEl = document.getElementById("grid-alert-unit");
+         if (unitEl) unitEl.style.display = "none";
+      } else {
+         let sibling = element.nextElementSibling;
+         while (sibling) {
+            if (sibling.classList.contains("unit-text")) {
+               sibling.style.display = "none";
+               break;
+            }
+            sibling = sibling.nextElementSibling;
+         }
       }
-      const roundedValue = Math.round(numericValue * 10) / 10;
-      element.textContent = roundedValue;
+      return;
+   } 
+   // VALID VALUE TO SET
+   else {
+      element.textContent = value; // Set only the value, unit is in a separate span
+      element.classList.remove("unknown-value");
+      if (idHtml === "grid-value-alert") {
+         const unitEl = document.getElementById("grid-alert-unit");
+         if (unitEl) unitEl.style.display = "inline";
+      } else {
+         let sibling = element.nextElementSibling;
+         while (sibling) {
+            if (sibling.classList.contains("unit-text")) {
+               sibling.style.display = "inline";
+               break;
+            }
+            sibling = sibling.nextElementSibling;
+         }
+      }
    }
+
 }
 
 function roundValue(value) {
-   //console.log("value dentro roundValue: " + value);
-   // if (value == "..." || value == "NaN" || value == "Undefined" || value == "undefined" || value == "Unavailable" || value == "unavailable" || isNaN(value)) {
-   //    //console.log("errore letura valore durante il roundValue(): " + value);
-   //    //console.log("OFFLINE");
-   //    return "...";
-   // }
-   if (ifNotUnavailable(value) == "non disponible")
-      return "non disponible";
+   if (value === "sconosciuto" || value === "unavailable") return "sconosciuto";
    let numericValue;
    try {
       numericValue = Number.parseFloat(value);
@@ -169,12 +158,25 @@ function roundValue(value) {
 function setBatteryValueSize(idHtml, value) {
    const element = document.getElementById(idHtml);
    const block = document.getElementById('battery-level-percentage-value');
+   
+   if (value === "sconosciuto" || value === "non disponibile") {
+      element.textContent = "sconosciuto";
+      element.classList.add("unknown-value");
+      const unit = document.getElementById("unit-text");
+      if (unit) unit.style.display = "none";
+   } else {
+      element.classList.remove("unknown-value");
+      const unit = document.getElementById("unit-text");
+      if (unit) unit.style.display = "inline";
+      element.textContent = value;
+   }
+
    if (block == 100) {
       block.style.display = 'none';
    } else {
       block.style.display = 'block';
    }
-   element.textContent = value;
+   // element.textContent = value; // Removed as set above
 }
 
 function hasError(json) {
@@ -227,7 +229,7 @@ function ifNotUnavailable(str) {
    const regex = /\bunavailable\b/i;
    // Testa la stringa con la regex
    if(regex.test(str))
-      return "non disponibile";
+      return "sconosciuto";
    else
       return str;
 }
