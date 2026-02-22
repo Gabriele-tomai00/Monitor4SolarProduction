@@ -16,7 +16,8 @@ function validateData(data) {
             if (typeof value === 'string') {
                 const sanitized = xss(value);
                 if (sanitized !== value) {
-                    throw new Error(`Potential XSS attack detected in field: ${key}`);
+                    console.error(`Error processing MQTT message: Potential XSS attack detected in field: ${key}`);
+                    data[key] = "sconosciuto";
                 }
             }
         }
@@ -37,15 +38,17 @@ client.on('connect', function () {
     // Management of messages received from the MQTT broker
     client.on('message', function (topic, message) {
         try {
-            const jsonData = JSON.stringify(message.toString(), null, 2);
-            const validJsonString = jsonData.replaceAll("'", '"');
-            let stringWithoutQuotes = validJsonString.replaceAll(/(?:^["'])|(?:["']$)/g, '');
-            const json = JSON.parse(stringWithoutQuotes);
-            json.reciver_mode = "mqtt";
+            const jsonData = JSON.parse(message.toString()); // Converts the message directly to JSON//+
 
-            validateData(json);
+            // const jsonData = JSON.stringify(message.toString(), null, 2);
+            // const validJsonString = jsonData.replaceAll("'", '"');
+            // let stringWithoutQuotes = validJsonString.replaceAll(/(?:^["'])|(?:["']$)/g, '');
+            // const json = JSON.parse(stringWithoutQuotes);
+            // json.reciver_mode = "mqtt";
 
-            io.emit('dati', json);
+            validateData(jsonData);
+
+            io.emit('dati', jsonData);
         } catch (error) {
             console.error('Error processing MQTT message:', error.message);
             const errJson = { error: "Home Assistant MQTT Error Connection" };
