@@ -362,13 +362,7 @@ if (fvValue > 0 && gridValue > 0 && houseValue > 0 && batteryValue < 0) {
  }
  
  
- function hideNumberZoomPicures(idString) {
-    let id = idString;
- }
- 
- function isZeroValue(valueN) {
-   return valueN == 0 || Number.isNaN(valueN);
-}
+
  
  function hideValueAndUnitByID(id) {
     document.getElementById(id).style.display = 'none';
@@ -380,10 +374,7 @@ if (fvValue > 0 && gridValue > 0 && houseValue > 0 && batteryValue < 0) {
     }
  }
  
- function changeSizeBattery() {
-    document.getElementById("battery-graphic-container").style.height = '100%';
-    document.getElementById('battery-graphic-container').style.top = "0%";
- }
+
  
  
  function checkForEnergyAlert(gridValue, prismPower) {

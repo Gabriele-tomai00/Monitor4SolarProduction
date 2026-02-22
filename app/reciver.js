@@ -203,17 +203,7 @@ function setRoundValue(idHtml, value) {
 
 }
 
-function roundValue(value) {
-   if (value === "sconosciuto" || value === "unavailable") return "sconosciuto";
-   let numericValue;
-   try {
-      numericValue = Number.parseFloat(value);
-   } catch (e) {
-      console.log("error in parsefloat: " + value);
-      return;
-   }
-   return Math.round(numericValue * 10) / 10;
-}
+
 
 function setBatteryValueSize(idHtml, value) {
    const element = document.getElementById(idHtml);
@@ -284,12 +274,3 @@ function hideConnectionAPIAlert() {
    bodyPage.style.filter = 'none';
 }
 
-function ifNotUnavailable(str) {
-   // Regex to search for "unavailable" regardless of format
-   const regex = /\bunavailable\b/i;
-   // Test the string with the regex
-   if(regex.test(str))
-      return "sconosciuto";
-   else
-      return str;
-}

@@ -175,28 +175,7 @@
             </div>
          </div>
       </div>
-      <script>
-         function toggleVisibility() {
-             const elements = document.querySelectorAll('.value-with-unit');
-             elements.forEach(element => {
-                 if (element.style.visibility === 'hidden') {
-                     element.style.visibility = 'visible';
-                 } else {
-                     element.style.visibility = 'hidden';
-                 }
-             });
-             var cells = document.querySelectorAll('td, th');
-             cells.forEach(cell => {
-                 if (borderVisible) {
-                     cell.style.border = 'none';
-                 } else {
-                     cell.style.border = '2px solid brown';
-                 }
-             });
-             borderVisible = !borderVisible; // Toggle border state
-         
-         }
-      </script>
+
    </body>
    <script src="vendor/socket.io.js"></script>
    <script src="reciver.js"></script>
