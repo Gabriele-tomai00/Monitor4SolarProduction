@@ -1,4 +1,6 @@
 const http = require('node:http');
+const fs = require('fs');
+const path = require('path');
 const express = require('express');
 const socketIo = require('socket.io');
 const app = express();
@@ -7,7 +9,22 @@ const io = socketIo(server);
 const mqtt = require('mqtt');
 const xss = require('xss');
 
-require('dotenv').config();
+const envPath = path.resolve(__dirname, '.env');
+
+if (!fs.existsSync(envPath)) {
+    console.error('Error: .env file not found.');
+    process.exit(1);
+}
+
+require('dotenv').config({ path: envPath });
+
+const requiredEnvVars = ['MQTT_HOST', 'MQTT_USERNAME', 'MQTT_PASSWORD'];
+const missingEnvVars = requiredEnvVars.filter(key => !process.env[key]);
+
+if (missingEnvVars.length > 0) {
+    console.error(`Error: Missing required environment variables in .env file: ${missingEnvVars.join(', ')}`);
+    process.exit(1);
+}
 
 function validateData(data) {
     for (const key in data) {
