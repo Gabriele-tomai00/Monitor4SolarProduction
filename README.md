@@ -106,7 +106,7 @@ node appMQTT.js
 # Docker
 
 Run your Node.js server in a Docker container with automatic `tmux` session management.
-After `git clone` the repository and `npm install`, you can run the container with:
+After `git clone` the repository, you can run the container with:
 ```bash
 # Stop any existing container and start a new one in detached mode
 sudo docker-compose down && docker-compose up -d
