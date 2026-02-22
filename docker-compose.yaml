@@ -7,8 +7,15 @@ services:
     ports:
       - "3100:3100"
     volumes:
-      - /volume2/docker/monitor4fv/monitor4fv:/monitor4fv
+      - /volume2/docker/Monitor4SolarProduction/app:/monitor4fv
     working_dir: /monitor4fv
-    command: bash -c "apt update && apt install -y tmux && tmux new -s node_mqtt -d 'node appMQTT.js' && tail -f /dev/null"
+    command: bash -c "
+      apt update &&
+      apt install -y tmux &&
+      cd /monitor4fv &&
+      npm install &&
+      tmux new -s node_mqtt -d 'node appMQTT.js' &&
+      tail -f /dev/null"
+
     tty: true
     restart: 'always'
