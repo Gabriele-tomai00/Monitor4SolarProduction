@@ -11,7 +11,6 @@ let batteryPVpercentage = [0, 0];
 let boilerPower = [0, 0];
 // car
 let carBatteryPercentge = [0, 0];
-let carPlugState = [0, 0];
 let wallboxChargePower = [0, 0];
 let wallboxPlugState = [0, 0];
 let lastUpdatePSA = [0, 0];
@@ -39,7 +38,7 @@ socket.on('dati', (data) => {
       boilerPower = ["sconosciuto", 0];
       // car
       carBatteryPercentge = ["sconosciuto", 0];
-      carPlugState = ["sconosciuto", 0];
+      carBatteryPercentge = ["sconosciuto", 0];
       wallboxChargePower = ["sconosciuto", 0];
       lastUpdatePSA = ["sconosciuto", 0];
       // ALERT APPEARS WITH "IMPOSSIBLE TO COMMUNICATE WITH SERVER"
@@ -62,19 +61,16 @@ socket.on('dati', (data) => {
          return [val, 0];
       };
 
-      pvGeneration = checkAndParse_var(data['solaredge_potenza_totale_dc']);
-      gridSensor = checkAndParse_var(data['prism_sensore_rete']);
-      homeConsumption = checkAndParse_var(data['consumo_casa']);
-      batteryPVchargeDischarge = checkAndParse_var(data['lg_carica_scarica_istantanea_kw']);
-      batteryPVpercentage = checkAndParse_var(data['lg_percentuale_di_carica']);
-      boilerPower = checkAndParse_var(data['shelly_consumo_boiler']);
+      pvGeneration = checkAndParse_var(data['pv_generation']);
+      gridSensor = checkAndParse_var(data['imported_redundant_power']);
+      homeConsumption = checkAndParse_var(data['home_consumption']);
+      batteryPVchargeDischarge = checkAndParse_var(data['battery_pv_charge_discharge']);
+      batteryPVpercentage = checkAndParse_var(data['battery_pv_percentage']);
+      boilerPower = checkAndParse_var(data['boiler_consumption']);
       // car
       carBatteryPercentge = checkAndParse_var(data['car_corsa_energy_level']);
-      carPlugState = checkAndParse_var(data['prism_plug_state']);
-      wallboxChargePower = checkAndParse_var(data['prism_potenza_di_carica']);
-      console.log(wallboxPlugState);
       wallboxPlugState = checkAndParse_var(data['prism_plug_state']);
-      console.log(wallboxPlugState);
+      wallboxChargePower = checkAndParse_var(data['prism_power_kw']);
       lastUpdatePSA = checkAndParse_var(data['car_corsa_last_update']);
 
       showPageAfterData();
@@ -139,7 +135,7 @@ socket.on('dati', (data) => {
       }
 
       updateEnergyBar(pvGeneration);
-      ChangeCarIcon(carPlugState, wallboxChargePower);
+      ChangeCarIcon(wallboxPlugState, wallboxChargePower);
       boilerIcon(boilerPower);
       updateArrowVisibility(pvGeneration, gridSensor, homeConsumption, batteryPVchargeDischarge);
       updateBatteryLevel(batteryPVpercentage);

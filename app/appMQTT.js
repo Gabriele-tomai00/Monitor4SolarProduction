@@ -27,6 +27,7 @@ if (missingEnvVars.length > 0) {
 }
 
 function validateData(data) {
+    //console.log(data);
     for (const key in data) {
         if (Object.prototype.hasOwnProperty.call(data, key)) {
             const value = data[key];
