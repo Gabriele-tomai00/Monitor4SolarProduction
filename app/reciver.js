@@ -43,27 +43,39 @@ socket.on('dati', (data) => {
       wallboxChargePower = ["sconosciuto", 0];
       lastUpdatePSA = ["sconosciuto", 0];
       // ALERT APPEARS WITH "IMPOSSIBLE TO COMMUNICATE WITH SERVER"
-      showConnectionAPIAlert();
+      showConnectionAlert();
    } else {
-      hideConnectionAPIAlert();
+      hideConnectionAlert();
       // GET VALUE FROM DATA RESPONSE //
       // check function: checks if the value is valid.
       // If it is undefined, null, or a string "unavailable"/"unknown"/"nan" (case insensitive),
       // returns a pair [value, 1] (invalid). Otherwise returns [value, 0] (valid).
-      const check = (val) => (val === undefined || val === null || /^(unavailable|unknown|nan|sconosciuto)$/i.test(val)) ? [val, 1] : [val, 0];
+      
+      const checkAndParse_var = (val) => {
+         if (val === undefined || val === null || /^(unavailable|unknown|nan|sconosciuto)$/i.test(val)) {
+            return [val, 1];
+         }
+         const num = Number(val);
+         if (!isNaN(num) && String(val).trim() !== "") {
+            return [num.toFixed(1), 0];
+         }
+         return [val, 0];
+      };
 
-      pvGeneration = check(data['solaredge_potenza_totale_dc']);
-      gridSensor = check(data['prism_sensore_rete']);
-      homeConsumption = check(data['consumo_casa']);
-      batteryPVchargeDischarge = check(data['lg_carica_scarica_istantanea_kw']);
-      batteryPVpercentage = check(data['lg_percentuale_di_carica']);
-      boilerPower = check(data['shelly_consumo_boiler']);
+      pvGeneration = checkAndParse_var(data['solaredge_potenza_totale_dc']);
+      gridSensor = checkAndParse_var(data['prism_sensore_rete']);
+      homeConsumption = checkAndParse_var(data['consumo_casa']);
+      batteryPVchargeDischarge = checkAndParse_var(data['lg_carica_scarica_istantanea_kw']);
+      batteryPVpercentage = checkAndParse_var(data['lg_percentuale_di_carica']);
+      boilerPower = checkAndParse_var(data['shelly_consumo_boiler']);
       // car
-      carBatteryPercentge = check(data['car_corsa_energy_level']);
-      carPlugState = check(data['prism_plug_state']);
-      wallboxChargePower = check(data['prism_potenza_di_carica']);
-      wallboxPlugState = check(data['prism_plug_state']);
-      lastUpdatePSA = check(data['car_corsa_last_update']);
+      carBatteryPercentge = checkAndParse_var(data['car_corsa_energy_level']);
+      carPlugState = checkAndParse_var(data['prism_plug_state']);
+      wallboxChargePower = checkAndParse_var(data['prism_potenza_di_carica']);
+      console.log(wallboxPlugState);
+      wallboxPlugState = checkAndParse_var(data['prism_plug_state']);
+      console.log(wallboxPlugState);
+      lastUpdatePSA = checkAndParse_var(data['car_corsa_last_update']);
 
       showPageAfterData();
 
@@ -182,9 +194,7 @@ function setRoundValue(idHtml, value) {
    // VALID VALUE TO SET
    else {
       // Use value[0] because value is an array [data, validity]
-      const num = Number.parseFloat(value[0]);
-      element.textContent = isNaN(num) ? value[0] : num.toFixed(1);
-
+      element.textContent = value[0];
       element.classList.remove("unknown-value");
       if (idHtml === "grid-value-alert") {
          const unitEl = document.getElementById("grid-alert-unit");
@@ -252,7 +262,7 @@ function showPageAfterData() {
    bodyPage.style.filter = 'none';
 }
 
-function showConnectionAPIAlert() {
+function showConnectionAlert() {
    var bodyPage = document.getElementById("bodyPageWithoutAlert");
    if (bodyPage.style.filter !== 'blur(25px)') {
       bodyPage.style.filter = 'blur(25px)';
@@ -266,7 +276,7 @@ function showConnectionAPIAlert() {
 }
 
 // Function to restore the web page and hide the alert
-function hideConnectionAPIAlert() {
+function hideConnectionAlert() {
    var avviso = document.getElementById("internetConnectionAlert");
    avviso.style.display = "none";
 
