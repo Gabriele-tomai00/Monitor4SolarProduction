@@ -8,7 +8,11 @@ This repository is **no longer actively maintained**.
 Please be aware that some dependencies may be outdated or insecure.  
 
 It is strongly recommended to ensure that your npm environment is updated before using this project.
-
+To update use the following commands:
+```bash
+cd app
+npm update
+```
 ## Introduction
 
 The Node.js web server retrieves photovoltaic data from:
